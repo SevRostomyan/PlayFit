@@ -1,0 +1,20 @@
+registering -> 	orgnr/Pernr
+				orgName
+				
+				kontat			 -> member 
+				kontaktAnsvarig		
+				kontaktUpgift		kontaktUpgift (adres,ele mm)
+									role(orgAnsvarig,.. .. )	->  Role
+									persnr	
+																											
+									anv (e-post)							
+									pwd										
+																orgAnsvarig
+																eko
+																trännare
+																ledarmot
+																medlem(spelare/elev)
+																
+																målsman					->  målsman
+																							medlemsbarn-1
+																
