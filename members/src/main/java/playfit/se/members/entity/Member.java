@@ -17,9 +17,10 @@ public class Member {
     @Id
     @GeneratedValue
     private Integer id;
-    private String adress;
+    private String address;
     private String firstname;
     private String lastname;
+    private String gender;
     private String email;
     private String password;
     @Enumerated(EnumType.STRING)
