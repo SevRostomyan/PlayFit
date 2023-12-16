@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import playfit.se.members.enums.UserRole;
 
+import java.util.List;
 
 
 @Entity
@@ -23,7 +24,11 @@ public class Member {
     private String gender;
     private String email;
     private String password;
+
+    @ElementCollection(targetClass = UserRole.class)
     @Enumerated(EnumType.STRING)
-    private UserRole role;
+    @CollectionTable(name = "member_roles", joinColumns = @JoinColumn(name = "member_id"))
+    @Column(name = "role")
+    private List<UserRole> role;
     //private List<Notifications> notifications;
 }
