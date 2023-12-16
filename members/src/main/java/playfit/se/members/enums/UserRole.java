@@ -1,8 +1,10 @@
 package playfit.se.members.enums;
 
 public enum UserRole {
-    MEDLEM,
+    MEMBER,
+    STUDENT,
     ADMIN,
-    ORG_KONTAKTPERSON,
-    Tränare
+    ORG_CONTACT_PERSON,
+    TRAINER,
+    GUARDIAN //Representant till barnen
 }

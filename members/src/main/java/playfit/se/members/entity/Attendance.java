@@ -11,20 +11,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Organisation_Club {
+public class Attendance {
     @Id
     @GeneratedValue
     private Integer id;
-    private String orgNr_PerNr;
-    private String orgRepresentative;
-    private String address;
-    private String zipCode;
-    private String city;
-    private String mobile;
-    private String eMail;
-
-
-
 
 
 }
