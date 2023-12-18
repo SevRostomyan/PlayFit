@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table
-public class Member {
+public class UserEntity {
 
     @Id
     @GeneratedValue

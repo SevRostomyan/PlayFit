@@ -1,8 +1,6 @@
 package playfit.se.members.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 import playfit.se.members.enums.TrainerSpeciality;
 
@@ -14,7 +12,7 @@ import java.util.Set;
 //@Data
 @NoArgsConstructor
 //@AllArgsConstructor
-public class Trainer extends Member{
+public class Trainer extends UserEntity {
 
     private TrainerSpeciality speciality;
 

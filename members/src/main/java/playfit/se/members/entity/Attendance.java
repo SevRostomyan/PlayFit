@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -15,5 +17,7 @@ public class Attendance {
     @Id
     @GeneratedValue
     private Integer id;
-
+    private LocalDate localDate;
+    private String status;
+    private int number_of_sessions;
 }
