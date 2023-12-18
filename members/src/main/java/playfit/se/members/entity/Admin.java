@@ -6,8 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Data
+//@Data
 @NoArgsConstructor
-@AllArgsConstructor
+//@AllArgsConstructor
 public class Admin  extends Member{
 }

@@ -16,5 +16,4 @@ public class Attendance {
     @GeneratedValue
     private Integer id;
 
-
 }

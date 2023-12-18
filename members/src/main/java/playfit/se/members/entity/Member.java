@@ -13,17 +13,19 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Inheritance(strategy = InheritanceType.JOINED)
+@Table
 public class Member {
 
     @Id
     @GeneratedValue
     private Integer id;
-    private String address;
-    private String firstname;
-    private String lastname;
-    private String gender;
     private String email;
     private String password;
+    private String firstname;
+    private String lastname;
+    private String address;
+    private String gender;
 
     @ElementCollection(targetClass = UserRole.class)
     @Enumerated(EnumType.STRING)

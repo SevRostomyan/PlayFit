@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 import playfit.se.members.enums.StudentLevel;
 
 @Entity
-@Data
+//@Data
 @NoArgsConstructor
-@AllArgsConstructor
+//@AllArgsConstructor
 public class Student extends Member{
 
 

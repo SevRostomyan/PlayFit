@@ -11,9 +11,9 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Data
+//@Data
 @NoArgsConstructor
-@AllArgsConstructor
+//@AllArgsConstructor
 public class Trainer extends Member{
 
     private TrainerSpeciality speciality;
