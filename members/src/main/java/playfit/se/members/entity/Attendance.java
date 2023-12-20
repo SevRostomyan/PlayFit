@@ -3,6 +3,7 @@ package playfit.se.members.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,7 +18,9 @@ public class Attendance {
     @Id
     @GeneratedValue
     private Integer id;
-    private LocalDate localDate;
-    private String status;
-    private int number_of_sessions;
+    private LocalDate passDate;
+    private boolean isPresent;
+
+    @OneToOne
+    private UserEntity userEntity;
 }

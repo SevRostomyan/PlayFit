@@ -1,14 +1,13 @@
 package playfit.se.members.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@Table
 @NoArgsConstructor
 @AllArgsConstructor
 public class Organisation_Club {
@@ -22,9 +21,5 @@ public class Organisation_Club {
     private String city;
     private String mobile;
     private String eMail;
-
-
-
-
 
 }

@@ -18,14 +18,11 @@ public class SportGroup {
     @GeneratedValue
     private Integer id;
 
-    private String GroupName;
+    private String SportName;
+    private int number_of_sessions;
 
-    @OneToMany(mappedBy = "sportGroup")
-    private List<Student> groupMembers;
-
-    @ManyToMany(mappedBy = "sportGroups")
-    private Set<Trainer> trainers = new HashSet<>();
-
-    @OneToMany(mappedBy = "sportGroup")
-    private List<SportsSessions> sportsSessions;
+    @OneToOne
+    private Attendance attendance;
+    @OneToOne
+    private UserEntity userEntity;
 }

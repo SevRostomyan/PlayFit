@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import playfit.se.members.enums.UserRole;
 
 import java.util.List;
 
@@ -13,7 +12,6 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Inheritance(strategy = InheritanceType.JOINED)
 @Table
 public class UserEntity {
 
@@ -24,13 +22,17 @@ public class UserEntity {
     private String password;
     private String firstname;
     private String lastname;
-    private String address;
+    private String personal_number;
     private String gender;
+    private String mobile;
+    private boolean status;
 
-    @ElementCollection(targetClass = UserRole.class)
-    @Enumerated(EnumType.STRING)
-    @CollectionTable(name = "member_roles", joinColumns = @JoinColumn(name = "member_id"))
-    @Column(name = "role")
-    private List<UserRole> role;
-    //private List<Notifications> notifications;
+    @OneToOne
+    private Address address;
+
+    @OneToMany
+    private List<Role> role;
+
+    @ManyToMany
+    private List<Organisation_Club> organisationClub;
 }
