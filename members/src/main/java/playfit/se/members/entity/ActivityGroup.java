@@ -5,20 +5,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SportGroup {
+public class ActivityGroup {
     @Id
     @GeneratedValue
     private Integer id;
 
-    private String SportName;
+    private String SportName; //ändra till aktivitetsNamn
     private int number_of_sessions;
 
     @OneToOne
