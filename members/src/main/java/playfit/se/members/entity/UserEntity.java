@@ -1,9 +1,10 @@
 package playfit.se.members.entity;
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import playfit.se.members.enums.Role;
+
 
 import java.util.List;
 
@@ -30,7 +31,8 @@ public class UserEntity {
     @OneToOne
     private Address address;
 
-    @OneToMany
+    @Enumerated(EnumType.STRING)
+    @ElementCollection(targetClass = Role.class)
     private List<Role> role;
 
     @ManyToMany

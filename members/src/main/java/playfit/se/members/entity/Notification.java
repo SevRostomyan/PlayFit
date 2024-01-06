@@ -5,24 +5,23 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.time.LocalDate;
 
 @Entity
 @Data
+@Table
 @NoArgsConstructor
 @AllArgsConstructor
-public class SportGroup {
+public class Notification {
     @Id
     @GeneratedValue
-    private Integer id;
-
-    private String SportName;
-    private int number_of_sessions;
-
+    private Long id ;
+    private String subject;
+    private String content;
+    private LocalDate timestamp;
     @OneToOne
-    private Attendance attendance;
-    @OneToOne
+    @JoinColumn(name = "id")
+    private Invoice invoice;
+    @ManyToOne
     private UserEntity userEntity;
 }

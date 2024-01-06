@@ -1,3 +1,4 @@
+/*
 package playfit.se.members.entity;
 
 import jakarta.persistence.Entity;
@@ -15,3 +16,4 @@ public class Guardian  extends UserEntity {
     private List<UserEntity> list_of_userEntity;
 
 }
+*/
