@@ -9,16 +9,16 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ActivityGroup {
+public class Activity_Group_Entity {
     @Id
     @GeneratedValue
-    private Integer id;
+    private Long id;
 
     private String SportName; //ändra till aktivitetsNamn
     private int number_of_sessions;
 
     @OneToOne
-    private Attendance attendance;
+    private Attendance_Entity attendanceEntity;
     @OneToOne
-    private UserEntity userEntity;
+    private User_Entity userEntity;
 }

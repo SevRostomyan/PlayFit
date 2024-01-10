@@ -10,10 +10,11 @@ import lombok.NoArgsConstructor;
 @Table
 @NoArgsConstructor
 @AllArgsConstructor
-public class Organisation_Club {
+public class Organisation_Club_Entity {
     @Id
-    @GeneratedValue
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "Organisation_Club_generator")
+    @SequenceGenerator(name = "Organisation_Club_generator", sequenceName = "Organisation_Club_seq", allocationSize = 1)
+    private Long id;
     private String orgNr_PerNr;
     private String orgRepresentative;
     private String address;
@@ -21,5 +22,6 @@ public class Organisation_Club {
     private String city;
     private String mobile;
     private String eMail;
+    private String password;
 
 }

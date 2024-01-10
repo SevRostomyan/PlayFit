@@ -1,4 +1,5 @@
 package playfit.se.members.entity;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,11 +15,12 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table
-public class UserEntity {
+public class User_Entity {
 
     @Id
-    @GeneratedValue
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userEntity_generator")
+    @SequenceGenerator(name = "userEntity_generator", sequenceName = "userEntity_seq", allocationSize = 1)
+    private Long id;
     private String email;
     private String password;
     private String firstname;
@@ -28,13 +30,18 @@ public class UserEntity {
     private String mobile;
     private boolean status;
 
-    @OneToOne
-    private Address address;
+    @OneToOne(cascade = CascadeType.ALL)
+    private Address_Entity addressEntity;
 
     @Enumerated(EnumType.STRING)
     @ElementCollection(targetClass = Role.class)
     private List<Role> role;
 
     @ManyToMany
-    private List<Organisation_Club> organisationClub;
+    @JoinTable(
+            name = "User_Entity_Guardian_Entity",
+            joinColumns = @JoinColumn(name = "User_Entity_id"),
+            inverseJoinColumns = @JoinColumn(name = "Guardian_Entity_id")
+    )
+    private List<Guardian_Entity> guardian_Entity_List;
 }

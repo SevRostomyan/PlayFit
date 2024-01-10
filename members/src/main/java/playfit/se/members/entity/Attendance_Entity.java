@@ -14,13 +14,13 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Attendance {
+public class Attendance_Entity {
     @Id
     @GeneratedValue
-    private Integer id;
+    private Long id;
     private LocalDate passDate;
     private boolean isPresent;
 
     @OneToOne
-    private UserEntity userEntity;
+    private User_Entity userEntity;
 }
