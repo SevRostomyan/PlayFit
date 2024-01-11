@@ -11,19 +11,19 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Invoice_Entity {
+public class InvoiceEntity {
     @Id
     @GeneratedValue
     private Long id;
     private String invoiceFilePath; // Path or URL to the invoice file   (Ej använt än. Behöver logik för att hämta filer)
 
     @OneToOne(mappedBy = "invoiceEntity")
-    private Notification_Entity notificationEntity;
+    private NotificationEntity notificationEntity;
 
-    private String invoice_num;
+    private String invoiceNum;
 
     @ManyToOne
-    private User_Entity userEntity;
+    private UserEntity userEntity;
 
     //@ManyToOne
     //private Subscription TrainingSubscription;  //The trainings that students pay for on monthly or yearly basis
@@ -36,8 +36,8 @@ public class Invoice_Entity {
 
     // Organisational details
     private String ClubName;
-    private String organisationalNumber;
-    private String organisationAddress;
+    private String organizationalNumber;
+    private String organizationAddress;
 
     // Customer details
     private String memberFirstName;

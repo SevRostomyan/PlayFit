@@ -3,6 +3,6 @@ package playfit.se.members.services;
 import org.springframework.stereotype.Service;
 
 @Service
-public class Organisation_Service {
+public class OrganizationService {
 
 }

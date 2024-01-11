@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @Table
 @NoArgsConstructor
 @AllArgsConstructor
-public class Notification_Entity {
+public class NotificationEntity {
     @Id
     @GeneratedValue
     private Long id ;
@@ -21,7 +21,7 @@ public class Notification_Entity {
     private LocalDate timestamp;
     @OneToOne
     @JoinColumn(name = "id")
-    private Invoice_Entity invoiceEntity;
+    private InvoiceEntity invoiceEntity;
     @ManyToOne
-    private User_Entity userEntity;
+    private UserEntity userEntity;
 }

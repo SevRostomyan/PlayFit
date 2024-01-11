@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Attendance_Entity {
+public class AttendanceEntity {
     @Id
     @GeneratedValue
     private Long id;
@@ -22,5 +22,5 @@ public class Attendance_Entity {
     private boolean isPresent;
 
     @OneToOne
-    private User_Entity userEntity;
+    private UserEntity userEntity;
 }

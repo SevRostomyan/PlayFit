@@ -10,10 +10,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table
-public class Address_Entity {
+public class AddressEntity {
      @Id
-     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "addressEntity_generator")
-     @SequenceGenerator(name = "addressEntity_generator", sequenceName = "addressEntity_seq", allocationSize = 1)
+     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "addressEntityGenerator")
+     @SequenceGenerator(name = "addressEntityGenerator", sequenceName = "addressEntitySeq", allocationSize = 1)
     private Long id;
     private String street;
     private String zipcode;

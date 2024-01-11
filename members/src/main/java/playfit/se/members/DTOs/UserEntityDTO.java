@@ -1,15 +1,15 @@
 package playfit.se.members.DTOs;
 
 import lombok.Data;
-import playfit.se.members.entity.Address_Entity;
+import playfit.se.members.entity.AddressEntity;
 @Data
-public class UserEntity_DTO {
+public class UserEntityDTO {
     private String email;
     private String password;
     private String firstname;
     private String lastname;
-    private String personal_number;
+    private String personalNumber;
     private String gender;
     private String mobile;
-    private Address_Entity addressEntity;
+    private AddressEntity addressEntity;
 }
