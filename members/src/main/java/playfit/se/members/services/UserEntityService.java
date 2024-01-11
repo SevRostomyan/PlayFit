@@ -32,7 +32,8 @@ public class UserEntityService {
             UserEntity userEntity = getUserEntity(userEntityDTO, addressEntity);
 
             userEntityRepository.save(userEntity);
-
+            response.setSuccess(true);
+            response.setMessage("You have successfully created an account!");
         }
         return (response);
     }
