@@ -49,4 +49,6 @@ public class UserEntity {
             inverseJoinColumns = @JoinColumn(name = "GuardianEntityId")
     )
     private List<GuardianEntity> guardianEntityList;
+    @ManyToOne
+    private ActivityGroupEntity activityGroupEntity;
 }
