@@ -35,7 +35,7 @@ public class UserEntity {
             joinColumns = @JoinColumn(name= "id")
     )
     private OrganizationClubEntity organizationClubEntity;
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     private AddressEntity addressEntity;
 
     @Enumerated(EnumType.STRING)

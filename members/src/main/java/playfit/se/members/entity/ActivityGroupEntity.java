@@ -21,6 +21,6 @@ public class ActivityGroupEntity {
 
     @OneToOne
     private AttendanceEntity attendanceEntity;
-    @OneToMany (mappedBy = "activityGroupEntity")
+    @OneToMany (mappedBy = "activityGroupEntity") // we wonder about if it can be many to many
     private List<UserEntity> userEntity;
 }

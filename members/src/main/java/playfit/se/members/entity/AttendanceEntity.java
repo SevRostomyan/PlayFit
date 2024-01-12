@@ -23,4 +23,6 @@ public class AttendanceEntity {
 
     @OneToOne
     private UserEntity userEntity;
+    @OneToOne
+    private ActivityGroupEntity activityGroupEntity;
 }
