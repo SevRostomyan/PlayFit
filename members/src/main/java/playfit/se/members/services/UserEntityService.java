@@ -2,7 +2,7 @@ package playfit.se.members.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import playfit.se.members.DTOs.UserEntityDTO;
+import playfit.se.members.DTOs.SignUpDTO;
 import playfit.se.members.entity.AddressEntity;
 import playfit.se.members.entity.UserEntity;
 import playfit.se.members.repositories.UserEntityRepository;
@@ -16,8 +16,8 @@ import java.util.Optional;
 public class UserEntityService {
     final private UserEntityRepository userEntityRepository;
 
-    public UserRegistrationResponse signUp(UserEntityDTO userEntityDTO) {
-        Optional<UserEntity> existingUserEntity = userEntityRepository.findUserByEmail(userEntityDTO.getEmail());
+    public UserRegistrationResponse signUp(SignUpDTO signUpDTO) {
+        Optional<UserEntity> existingUserEntity = userEntityRepository.findUserByEmail(signUpDTO.getEmail());
         UserRegistrationResponse response = new UserRegistrationResponse();
 
         if (existingUserEntity.isPresent()) {
@@ -25,11 +25,11 @@ public class UserEntityService {
             response.setMessage("You already have an account!");
         } else {
             AddressEntity addressEntity = new AddressEntity();
-            addressEntity.setStreet(userEntityDTO.getAddressEntity().getStreet());
-            addressEntity.setZipcode(userEntityDTO.getAddressEntity().getZipcode());
-            addressEntity.setCity(userEntityDTO.getAddressEntity().getCity());
+            addressEntity.setStreet(signUpDTO.getAddressEntity().getStreet());
+            addressEntity.setZipcode(signUpDTO.getAddressEntity().getZipcode());
+            addressEntity.setCity(signUpDTO.getAddressEntity().getCity());
 
-            UserEntity userEntity = getUserEntity(userEntityDTO, addressEntity);
+            UserEntity userEntity = getUserEntity(signUpDTO, addressEntity);
 
             userEntityRepository.save(userEntity);
             response.setSuccess(true);
@@ -38,16 +38,17 @@ public class UserEntityService {
         return (response);
     }
 
-    private static UserEntity getUserEntity(UserEntityDTO userEntityDTO, AddressEntity addressEntity) {
+    private static UserEntity getUserEntity(SignUpDTO signUpDTO, AddressEntity addressEntity) {
         UserEntity userEntity = new UserEntity();
 
-        userEntity.setEmail(userEntityDTO.getEmail());
-        userEntity.setPassword(userEntityDTO.getPassword());
-        userEntity.setFirstname(userEntityDTO.getFirstname());
-        userEntity.setLastname(userEntityDTO.getLastname());
-        userEntity.setPersonalNumber(userEntityDTO.getPersonalNumber());
-        userEntity.setGender(userEntityDTO.getGender());
-        userEntity.setMobile(userEntityDTO.getMobile());
+        userEntity.setEmail(signUpDTO.getEmail());
+        userEntity.setPassword(signUpDTO.getPassword());
+        userEntity.setFirstName(signUpDTO.getFirstname());
+        userEntity.setLastName(signUpDTO.getLastname());
+        userEntity.setPersonalNumber(signUpDTO.getPersonalNumber());
+        userEntity.setGender(signUpDTO.getGender());
+        userEntity.setMobile(signUpDTO.getMobile());
+        userEntity.setOrgId(signUpDTO.getOrgId());
         userEntity.setAddressEntity(addressEntity);
         return userEntity;
     }

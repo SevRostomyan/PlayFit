@@ -17,7 +17,7 @@ public class InvoiceEntity {
     private Long id;
     private String invoiceFilePath; // Path or URL to the invoice file   (Ej använt än. Behöver logik för att hämta filer)
 
-    @OneToOne(mappedBy = "invoiceEntity")
+    @OneToOne
     private NotificationEntity notificationEntity;
 
     private String invoiceNum;

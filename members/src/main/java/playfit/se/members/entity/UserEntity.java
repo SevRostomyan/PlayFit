@@ -23,17 +23,13 @@ public class UserEntity {
     private Long id;
     private String email;
     private String password;
-    private String firstname;
-    private String lastname;
+    private String firstName;
+    private String lastName;
     private String personalNumber;
     private String gender;
     private String mobile;
     private boolean status;
-    @OneToOne(mappedBy = "representative")
-    @JoinTable(
-            name = "organization",
-            joinColumns = @JoinColumn(name= "id")
-    )
+    @ManyToOne
     private OrganizationClubEntity organizationClubEntity;
     @ManyToOne(cascade = CascadeType.ALL)
     private AddressEntity addressEntity;
@@ -49,6 +45,7 @@ public class UserEntity {
             inverseJoinColumns = @JoinColumn(name = "GuardianEntityId")
     )
     private List<GuardianEntity> guardianEntityList;
+    private Long orgId;
     @ManyToOne
     private ActivityGroupEntity activityGroupEntity;
 }

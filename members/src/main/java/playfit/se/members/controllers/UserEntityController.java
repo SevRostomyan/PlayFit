@@ -2,11 +2,8 @@ package playfit.se.members.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import playfit.se.members.DTOs.UserEntityDTO;
+import org.springframework.web.bind.annotation.*;
+import playfit.se.members.DTOs.SignUpDTO;
 import playfit.se.members.responses.UserRegistrationResponse;
 import playfit.se.members.services.UserEntityService;
 
@@ -18,8 +15,8 @@ public class UserEntityController {
     final private UserEntityService userEntityService;
 
     @PostMapping()
-    public ResponseEntity<String> signUp(@RequestBody UserEntityDTO userEntityDTO) {
-      UserRegistrationResponse response=  userEntityService.signUp(userEntityDTO);
+    public ResponseEntity<String> signUp(@RequestBody SignUpDTO signUpDTO) {
+      UserRegistrationResponse response=  userEntityService.signUp(signUpDTO);
         if (response.isSuccess()) {
             // vi måste implementera notification (send an email)
             return ResponseEntity.ok(response.getMessage());
@@ -27,4 +24,5 @@ public class UserEntityController {
             return ResponseEntity.badRequest().body(response.getMessage());
         }
     }
+
 }

@@ -20,7 +20,6 @@ public class NotificationEntity {
     private String content;
     private LocalDate timestamp;
     @OneToOne
-    @JoinColumn(name = "id")
     private InvoiceEntity invoiceEntity;
     @ManyToOne
     private UserEntity userEntity;
