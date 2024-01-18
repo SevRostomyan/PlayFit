@@ -1,4 +1,5 @@
 package playfit.se.members.entity;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,24 +18,34 @@ import java.util.List;
 public class UserEntity {
 
     @Id
-    @GeneratedValue
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userEntityGenerator")
+    @SequenceGenerator(name = "userEntityGenerator", sequenceName = "userEntitySeq", allocationSize = 1)
+    private Long id;
     private String email;
     private String password;
-    private String firstname;
-    private String lastname;
-    private String personal_number;
+    private String firstName;
+    private String lastName;
+    private String personalNumber;
     private String gender;
     private String mobile;
     private boolean status;
-
-    @OneToOne
-    private Address address;
+    @ManyToOne
+    private OrganizationClubEntity organizationClubEntity;
+    @ManyToOne(cascade = CascadeType.ALL)
+    private AddressEntity addressEntity;
 
     @Enumerated(EnumType.STRING)
     @ElementCollection(targetClass = Role.class)
     private List<Role> role;
 
     @ManyToMany
-    private List<Organisation_Club> organisationClub;
+    @JoinTable(
+            name = "UserEntityGuardianEntity",
+            joinColumns = @JoinColumn(name = "UserEntityId"),
+            inverseJoinColumns = @JoinColumn(name = "GuardianEntityId")
+    )
+    private List<GuardianEntity> guardianEntityList;
+    private Long orgId;
+    @ManyToOne
+    private ActivityGroupEntity activityGroupEntity;
 }

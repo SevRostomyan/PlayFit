@@ -5,20 +5,22 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ActivityGroup {
+public class ActivityGroupEntity {
     @Id
     @GeneratedValue
-    private Integer id;
+    private Long id;
 
     private String SportName; //ändra till aktivitetsNamn
-    private int number_of_sessions;
+    private int numberOfSessions;
 
     @OneToOne
-    private Attendance attendance;
-    @OneToOne
-    private UserEntity userEntity;
+    private AttendanceEntity attendanceEntity;
+    @OneToMany (mappedBy = "activityGroupEntity") // we wonder about if it can be many to many
+    private List<UserEntity> userEntity;
 }

@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @Table
 @NoArgsConstructor
 @AllArgsConstructor
-public class Notification {
+public class NotificationEntity {
     @Id
     @GeneratedValue
     private Long id ;
@@ -20,8 +20,7 @@ public class Notification {
     private String content;
     private LocalDate timestamp;
     @OneToOne
-    @JoinColumn(name = "id")
-    private Invoice invoice;
+    private InvoiceEntity invoiceEntity;
     @ManyToOne
     private UserEntity userEntity;
 }
