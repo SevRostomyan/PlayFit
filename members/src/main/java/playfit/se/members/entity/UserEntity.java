@@ -28,7 +28,8 @@ public class UserEntity {
     private String personalNumber;
     private String gender;
     private String mobile;
-    private boolean status;
+    private boolean accountStatus = false; // if it is active or deleted
+    private boolean loginStatus = false;  // if is online or not.
     @ManyToOne
     private OrganizationClubEntity organizationClubEntity;
     @ManyToOne(cascade = CascadeType.ALL)
@@ -45,7 +46,7 @@ public class UserEntity {
             inverseJoinColumns = @JoinColumn(name = "GuardianEntityId")
     )
     private List<GuardianEntity> guardianEntityList;
-    private Long orgId;
+//    private Long orgId;
     @ManyToOne
     private ActivityGroupEntity activityGroupEntity;
 }
