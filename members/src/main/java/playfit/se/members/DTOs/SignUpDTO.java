@@ -13,5 +13,4 @@ public class SignUpDTO {
     private String mobile;
     private AddressEntity addressEntity;
     private Long orgId;
-
 }
