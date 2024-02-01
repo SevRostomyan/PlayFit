@@ -16,7 +16,7 @@ public class UserEntityController {
 
     final private UserEntityService userEntityService;
 
-    @PostMapping()
+    @PostMapping("/sign-up")
     public ResponseEntity<String> signUp(@RequestBody SignUpDTO signUpDTO) {
         UserRegistrationResponse response = userEntityService.signUp(signUpDTO);
         if (response.isSuccess()) {
@@ -28,7 +28,7 @@ public class UserEntityController {
     }
 
     // Vi behöver att lägga till förutsättningen att man har en godkänd konto.
-    @PostMapping()
+    @PostMapping("sign-in")
     public ResponseEntity<String> signIn(@RequestBody SignInDTO signInDTO) {
         UserLogInResponse response = userEntityService.signIn(signInDTO);
         if (response.getMessage() !=null) {
