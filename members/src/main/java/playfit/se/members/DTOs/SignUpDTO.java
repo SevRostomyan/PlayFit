@@ -1,7 +1,7 @@
 package playfit.se.members.DTOs;
 
 import lombok.Data;
-import playfit.se.members.entity.AddressEntity;
+import playfit.se.members.entities.AddressEntity;
 @Data
 public class SignUpDTO {
     private String email;

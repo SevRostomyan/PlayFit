@@ -1,4 +1,4 @@
-package playfit.se.members.entity;
+package playfit.se.members.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

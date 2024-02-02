@@ -1,7 +1,7 @@
 package playfit.se.members.DTOs;
 
 import lombok.Data;
-import playfit.se.members.entity.UserEntity;
+import playfit.se.members.entities.UserEntity;
 
 @Data
 public class OrganizationClubDTO {
