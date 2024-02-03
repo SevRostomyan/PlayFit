@@ -12,6 +12,7 @@ import playfit.se.members.services.JWTService;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.function.Function;
 
 @Service
 public class JWTServiceImpl implements JWTService {
@@ -44,5 +45,9 @@ public class JWTServiceImpl implements JWTService {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
+    }
+    private <T> T extractClaim(String token, Function<Claims, T> claimsResolvers) {
+        final Claims claims = extractAllClaims(token);
+        return claimsResolvers.apply(claims);
     }
 }
