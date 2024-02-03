@@ -55,4 +55,13 @@ public class JWTServiceImpl implements JWTService {
     public String extractUserName(String token) {
         return extractClaim(token, Claims::getSubject);
     }
+
+    public boolean isTokenValid(String token, UserDetails userDetails) {
+        final String userName = extractUserName(token);
+        return (userName.equals(userDetails.getUsername())) && !isTokenExpired(token);
+    }
+
+    private boolean isTokenExpired(String token) {
+        return extractClaim(token, Claims::getExpiration).before(new Date());
+    }
 }
