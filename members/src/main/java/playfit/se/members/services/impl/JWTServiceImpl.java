@@ -46,8 +46,13 @@ public class JWTServiceImpl implements JWTService {
                 .parseClaimsJws(token)
                 .getBody();
     }
+
     private <T> T extractClaim(String token, Function<Claims, T> claimsResolvers) {
         final Claims claims = extractAllClaims(token);
         return claimsResolvers.apply(claims);
+    }
+
+    public String extractUserName(String token) {
+        return extractClaim(token, Claims::getSubject);
     }
 }
