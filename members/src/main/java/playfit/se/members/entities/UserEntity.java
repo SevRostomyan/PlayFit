@@ -4,9 +4,14 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import playfit.se.members.enums.Role;
 
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 
@@ -15,7 +20,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table
-public class UserEntity {
+public class UserEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userEntityGenerator")
@@ -37,7 +42,7 @@ public class UserEntity {
 
     @Enumerated(EnumType.STRING)
     @ElementCollection(targetClass = Role.class)
-    private List<Role> role;
+    private List<Role> roles;
 
     @ManyToMany
     @JoinTable(
@@ -46,7 +51,42 @@ public class UserEntity {
             inverseJoinColumns = @JoinColumn(name = "GuardianEntityId")
     )
     private List<GuardianEntity> guardianEntityList;
-//    private Long orgId;
+    //    private Long orgId;
     @ManyToOne
     private ActivityGroupEntity activityGroupEntity;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<GrantedAuthority> authorities = new ArrayList<>();
+
+        for (Role role : this.roles) {
+            authorities.add(new SimpleGrantedAuthority(role.name()));
+        }
+        return authorities;
+    }
+
+    @Override
+    public String getUsername() {
+        return null;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return false;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return false;
+    }
 }

@@ -40,7 +40,7 @@ public class OrganizationClubEntity implements UserDetails {
 
         for (UserEntity userEntity : userEntities) {
             authorities.addAll(
-                    userEntity.getRole().stream()
+                    userEntity.getRoles().stream()
                             .map(role -> new SimpleGrantedAuthority(role.name()))
                             .toList()
             );
