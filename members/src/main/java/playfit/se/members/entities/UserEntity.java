@@ -8,6 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import playfit.se.members.enums.Role;
+import playfit.se.members.token.Token;
 
 
 import java.util.ArrayList;
@@ -54,6 +55,8 @@ public class UserEntity implements UserDetails {
     //    private Long orgId;
     @ManyToOne
     private ActivityGroupEntity activityGroupEntity;
+    @OneToMany(mappedBy = "userEntity")
+    private List<Token> tokens;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
