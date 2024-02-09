@@ -36,14 +36,18 @@ public class UserEntity implements UserDetails {
     private String mobile;
     private boolean accountStatus = false; // if it is active or deleted
     private boolean loginStatus = false;  // if is online or not.
-    @ManyToOne
-    private OrganizationClubEntity organizationClubEntity;
+    @ManyToMany
+    @JoinTable(
+            name = "UserEntityClubEntity",
+            joinColumns = @JoinColumn(name = "UserEntityId"),
+            inverseJoinColumns = @JoinColumn(name = "ClubEntityId")
+    )
+    private List<ClubEntity> clubEntity;
     @ManyToOne(cascade = CascadeType.ALL)
     private AddressEntity addressEntity;
 
-    @Enumerated(EnumType.STRING)
-    @ElementCollection(targetClass = Role.class)
-    private List<Role> roles;
+    @OneToMany(mappedBy = "user" )
+    private List<RoleEntity> roles;
 
     @ManyToMany
     @JoinTable(
@@ -62,8 +66,8 @@ public class UserEntity implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
 
-        for (Role role : this.roles) {
-            authorities.add(new SimpleGrantedAuthority(role.name()));
+        for (RoleEntity role : this.roles) {
+            authorities.add(new SimpleGrantedAuthority(role.getType()));
         }
         return authorities;
     }

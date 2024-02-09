@@ -3,15 +3,19 @@ package playfit.se.members.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import playfit.se.members.DTOs.SignInDTO;
-import playfit.se.members.DTOs.SignUpDTO;
+import playfit.se.members.DTOs.SignUpUserEntityDTO;
 import playfit.se.members.entities.AddressEntity;
-import playfit.se.members.entities.OrganizationClubEntity;
+import playfit.se.members.entities.ClubEntity;
+import playfit.se.members.entities.RoleEntity;
 import playfit.se.members.entities.UserEntity;
-import playfit.se.members.repositories.OrganizationRepository;
+import playfit.se.members.enums.Role;
+import playfit.se.members.repositories.ClubRepository;
+import playfit.se.members.repositories.RoleRepository;
 import playfit.se.members.repositories.UserEntityRepository;
 import playfit.se.members.responses.UserLogInResponse;
 import playfit.se.members.responses.UserRegistrationResponse;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -20,12 +24,13 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserEntityService {
     final private UserEntityRepository userEntityRepository;
-    final private OrganizationRepository organizationRepository;
+    private final RoleRepository roleRepository;
+    final private ClubRepository clubRepository;
 
-    public UserRegistrationResponse signUp(SignUpDTO signUpDTO) {
-       OrganizationClubEntity existingOrganizationClubEntity = organizationRepository.findById(signUpDTO.getOrgId())
-               .orElseThrow(()-> new IllegalArgumentException("No organization found"));
-        Optional<UserEntity> existingUserEntity = userEntityRepository.findUserByEmail(signUpDTO.getEmail());
+    public UserRegistrationResponse signUp(SignUpUserEntityDTO signUpUserEntityDTO) {
+        ClubEntity existingClubEntity = clubRepository.findById(signUpUserEntityDTO.getOrgId())
+                .orElseThrow(()-> new IllegalArgumentException("No organization found"));
+        Optional<UserEntity> existingUserEntity = userEntityRepository.findUserByEmail(signUpUserEntityDTO.getEmail());
         UserRegistrationResponse response = new UserRegistrationResponse();
 
         if (existingUserEntity.isPresent()) {
@@ -33,31 +38,39 @@ public class UserEntityService {
             response.setMessage("You already have an account!");
         } else {
             AddressEntity addressEntity = new AddressEntity();
-            addressEntity.setStreet(signUpDTO.getAddressEntity().getStreet());
-            addressEntity.setZipcode(signUpDTO.getAddressEntity().getZipcode());
-            addressEntity.setCity(signUpDTO.getAddressEntity().getCity());
+            addressEntity.setStreet(signUpUserEntityDTO.getAddressDTO().getStreet());
+            addressEntity.setZipcode(signUpUserEntityDTO.getAddressDTO().getZipcode());
+            addressEntity.setCity(signUpUserEntityDTO.getAddressDTO().getCity());
 
-            UserEntity userEntity = getUserEntity(signUpDTO, addressEntity);
-            userEntity.setOrganizationClubEntity(existingOrganizationClubEntity);
+            UserEntity userEntity = getUserEntity(signUpUserEntityDTO, addressEntity);
+            userEntity.setClubEntity(List.of(existingClubEntity));
             userEntityRepository.save(userEntity);
-            organizationRepository.save(existingOrganizationClubEntity);
+            clubRepository.save(existingClubEntity);
+
+            RoleEntity role = new RoleEntity();
+            role.setUser(userEntity);
+            role.setClubId(existingClubEntity.getId());
+            role.setRole(Role.STUDENT);
+            role.setType(Role.STUDENT.name());
+            roleRepository.save(role);
+
             response.setSuccess(true);
             response.setMessage("You have successfully created an account!");
         }
         return (response);
     }
 
-    private static UserEntity getUserEntity(SignUpDTO signUpDTO, AddressEntity addressEntity) {
+    public UserEntity getUserEntity(SignUpUserEntityDTO signUpUserEntityDTO, AddressEntity addressEntity) {
         UserEntity userEntity = new UserEntity();
 
-        userEntity.setEmail(signUpDTO.getEmail());
-        userEntity.setPassword(signUpDTO.getPassword());
-        userEntity.setFirstName(signUpDTO.getFirstname());
-        userEntity.setLastName(signUpDTO.getLastname());
-        userEntity.setPersonalNumber(signUpDTO.getPersonalNumber());
-        userEntity.setGender(signUpDTO.getGender());
-        userEntity.setMobile(signUpDTO.getMobile());
-//        userEntity.setOrgId(signUpDTO.getOrgId());
+        userEntity.setEmail(signUpUserEntityDTO.getEmail());
+        userEntity.setPassword(signUpUserEntityDTO.getPassword());
+        userEntity.setFirstName(signUpUserEntityDTO.getFirstname());
+        userEntity.setLastName(signUpUserEntityDTO.getLastname());
+        userEntity.setPersonalNumber(signUpUserEntityDTO.getPersonalNumber());
+        userEntity.setGender(signUpUserEntityDTO.getGender());
+        userEntity.setMobile(signUpUserEntityDTO.getMobile());
+        //userEntity.setOrgId(signUpDTO.getOrgId());
         userEntity.setAddressEntity(addressEntity);
         return userEntity;
     }
@@ -81,6 +94,19 @@ public class UserEntityService {
         }
 
 
+        return response;
+    }
+
+    public UserRegistrationResponse addClub(Long memberId, Long clubId) {
+        UserEntity userEntity = userEntityRepository.findById(memberId).orElseThrow(()-> new IllegalArgumentException("No user found"));
+        ClubEntity clubEntity = clubRepository.findById(clubId).orElseThrow(()-> new IllegalArgumentException("No club found"));
+
+        userEntity.getClubEntity().add(clubEntity);
+        userEntityRepository.save(userEntity);
+
+        UserRegistrationResponse response = new UserRegistrationResponse();
+        response.setSuccess(true);
+        response.setMessage("You have successfully added a club!");
         return response;
     }
 }
