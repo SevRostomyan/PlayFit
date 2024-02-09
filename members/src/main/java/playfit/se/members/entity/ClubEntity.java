@@ -12,19 +12,17 @@ import java.util.List;
 @Table
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrganizationClubEntity {
+public class ClubEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "OrganizationClubGenerator")
-    @SequenceGenerator(name = "OrganizationClubGenerator", sequenceName = "OrganizationClubSeq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "clubGenerator")
+    @SequenceGenerator(name = "clubGenerator", sequenceName = "clubSeq", allocationSize = 1)
     private Long id;
     private String orgNr;
     private String orgName;
-    @OneToMany (mappedBy = "organizationClubEntity")
+    @ManyToMany (mappedBy = "clubEntity")
     private List<UserEntity> userEntities;
     private String address;
     private String zipCode;
     private String city;
     private String mobile;
-    private String eMail;
-    private String password;
 }

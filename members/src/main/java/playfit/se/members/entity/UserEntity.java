@@ -30,15 +30,18 @@ public class UserEntity {
     private String mobile;
     private boolean accountStatus = false; // if it is active or deleted
     private boolean loginStatus = false;  // if is online or not.
-    @ManyToOne
-    private OrganizationClubEntity organizationClubEntity;
+    @ManyToMany
+    @JoinTable(
+            name = "UserEntityClubEntity",
+            joinColumns = @JoinColumn(name = "UserEntityId"),
+            inverseJoinColumns = @JoinColumn(name = "ClubEntityId")
+    )
+    private List<ClubEntity> clubEntity;
     @ManyToOne(cascade = CascadeType.ALL)
     private AddressEntity addressEntity;
 
-    @Enumerated(EnumType.STRING)
-    @ElementCollection(targetClass = Role.class)
-    private List<Role> role;
-
+    @OneToMany(mappedBy = "user" )
+    private List<RoleEntity> role;
     @ManyToMany
     @JoinTable(
             name = "UserEntityGuardianEntity",
@@ -46,7 +49,7 @@ public class UserEntity {
             inverseJoinColumns = @JoinColumn(name = "GuardianEntityId")
     )
     private List<GuardianEntity> guardianEntityList;
-//    private Long orgId;
+    //private Long orgId;
     @ManyToOne
     private ActivityGroupEntity activityGroupEntity;
 }
