@@ -40,10 +40,8 @@ public class UserEntity {
     @ManyToOne(cascade = CascadeType.ALL)
     private AddressEntity addressEntity;
 
-    @Enumerated(EnumType.STRING)
-    @ElementCollection(targetClass = Role.class)
-    private List<Role> role;
-
+    @OneToMany(mappedBy = "user" )
+    private List<RoleEntity> role;
     @ManyToMany
     @JoinTable(
             name = "UserEntityGuardianEntity",

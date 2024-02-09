@@ -26,6 +26,16 @@ public class UserEntityController {
             return ResponseEntity.badRequest().body(response.getMessage());
         }
     }
+    @PutMapping("/add-club/{memberId}/{clubId}")
+    public ResponseEntity<String> addClub(@PathVariable Long memberId, @PathVariable Long clubId){
+        UserRegistrationResponse response = userEntityService.addClub(memberId, clubId);
+        if (response.isSuccess()) {
+            // vi måste implementera notification (send an email)
+            return ResponseEntity.ok(response.getMessage());
+        } else {
+            return ResponseEntity.badRequest().body(response.getMessage());
+        }
+    }
 
     // Vi behöver att lägga till förutsättningen att man har en godkänd konto.
     @PostMapping("sign-in")

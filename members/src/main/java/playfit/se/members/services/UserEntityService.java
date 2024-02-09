@@ -15,6 +15,7 @@ import playfit.se.members.repositories.UserEntityRepository;
 import playfit.se.members.responses.UserLogInResponse;
 import playfit.se.members.responses.UserRegistrationResponse;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -37,9 +38,9 @@ public class UserEntityService {
             response.setMessage("You already have an account!");
         } else {
             AddressEntity addressEntity = new AddressEntity();
-            addressEntity.setStreet(signUpDTO.getAddressEntity().getStreet());
-            addressEntity.setZipcode(signUpDTO.getAddressEntity().getZipcode());
-            addressEntity.setCity(signUpDTO.getAddressEntity().getCity());
+            addressEntity.setStreet(signUpUserEntityDTO.getAddressDTO().getStreet());
+            addressEntity.setZipcode(signUpUserEntityDTO.getAddressDTO().getZipcode());
+            addressEntity.setCity(signUpUserEntityDTO.getAddressDTO().getCity());
 
             UserEntity userEntity = getUserEntity(signUpUserEntityDTO, addressEntity);
             userEntity.setClubEntity(List.of(existingClubEntity));
@@ -59,7 +60,7 @@ public class UserEntityService {
         return (response);
     }
 
-    private static UserEntity getUserEntity(SignUpDTO signUpDTO, AddressEntity addressEntity) {
+    public UserEntity getUserEntity(SignUpUserEntityDTO signUpUserEntityDTO, AddressEntity addressEntity) {
         UserEntity userEntity = new UserEntity();
 
         userEntity.setEmail(signUpUserEntityDTO.getEmail());
@@ -93,6 +94,19 @@ public class UserEntityService {
         }
 
 
+        return response;
+    }
+
+    public UserRegistrationResponse addClub(Long memberId, Long clubId) {
+      UserEntity userEntity = userEntityRepository.findById(memberId).orElseThrow(()-> new IllegalArgumentException("No user found"));
+        ClubEntity clubEntity = clubRepository.findById(clubId).orElseThrow(()-> new IllegalArgumentException("No club found"));
+
+        userEntity.getClubEntity().add(clubEntity);
+        userEntityRepository.save(userEntity);
+
+        UserRegistrationResponse response = new UserRegistrationResponse();
+        response.setSuccess(true);
+        response.setMessage("You have successfully added a club!");
         return response;
     }
 }
