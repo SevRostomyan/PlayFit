@@ -1,4 +1,4 @@
-package playfit.se.members.entity;
+package playfit.se.members.entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

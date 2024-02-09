@@ -1,5 +1,4 @@
 package playfit.se.members.DTOs;
-
 import lombok.Data;
 
 @Data

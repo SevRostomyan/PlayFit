@@ -3,11 +3,11 @@ package playfit.se.members.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import playfit.se.members.DTOs.SignUpClubDTO;
-import playfit.se.members.DTOs.SignUpClubWithExistingUserDTO;
-import playfit.se.members.entity.AddressEntity;
-import playfit.se.members.entity.ClubEntity;
-import playfit.se.members.entity.RoleEntity;
-import playfit.se.members.entity.UserEntity;
+
+import playfit.se.members.entities.AddressEntity;
+import playfit.se.members.entities.ClubEntity;
+import playfit.se.members.entities.RoleEntity;
+import playfit.se.members.entities.UserEntity;
 import playfit.se.members.enums.Role;
 import playfit.se.members.repositories.ClubRepository;
 import playfit.se.members.repositories.RoleRepository;
@@ -78,4 +78,3 @@ public class ClubService {
     }
 
 }
-

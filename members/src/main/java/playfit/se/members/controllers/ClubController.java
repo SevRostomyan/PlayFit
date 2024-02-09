@@ -15,7 +15,7 @@ import playfit.se.members.services.ClubService;
 @RequiredArgsConstructor
 public class ClubController {
 
-private final ClubService clubService;
+    private final ClubService clubService;
     @PostMapping("/create-club")
     public ResponseEntity<String> createClub(@RequestBody SignUpClubDTO signUpClubDTO) {
         ClubRegistrationResponse response = clubService.createClub(signUpClubDTO);

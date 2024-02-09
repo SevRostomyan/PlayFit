@@ -4,10 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import playfit.se.members.DTOs.SignInDTO;
 import playfit.se.members.DTOs.SignUpUserEntityDTO;
-import playfit.se.members.entity.AddressEntity;
-import playfit.se.members.entity.ClubEntity;
-import playfit.se.members.entity.RoleEntity;
-import playfit.se.members.entity.UserEntity;
+import playfit.se.members.entities.AddressEntity;
+import playfit.se.members.entities.ClubEntity;
+import playfit.se.members.entities.RoleEntity;
+import playfit.se.members.entities.UserEntity;
 import playfit.se.members.enums.Role;
 import playfit.se.members.repositories.ClubRepository;
 import playfit.se.members.repositories.RoleRepository;
@@ -28,8 +28,8 @@ public class UserEntityService {
     final private ClubRepository clubRepository;
 
     public UserRegistrationResponse signUp(SignUpUserEntityDTO signUpUserEntityDTO) {
-       ClubEntity existingClubEntity = clubRepository.findById(signUpUserEntityDTO.getOrgId())
-               .orElseThrow(()-> new IllegalArgumentException("No organization found"));
+        ClubEntity existingClubEntity = clubRepository.findById(signUpUserEntityDTO.getOrgId())
+                .orElseThrow(()-> new IllegalArgumentException("No organization found"));
         Optional<UserEntity> existingUserEntity = userEntityRepository.findUserByEmail(signUpUserEntityDTO.getEmail());
         UserRegistrationResponse response = new UserRegistrationResponse();
 
@@ -98,7 +98,7 @@ public class UserEntityService {
     }
 
     public UserRegistrationResponse addClub(Long memberId, Long clubId) {
-      UserEntity userEntity = userEntityRepository.findById(memberId).orElseThrow(()-> new IllegalArgumentException("No user found"));
+        UserEntity userEntity = userEntityRepository.findById(memberId).orElseThrow(()-> new IllegalArgumentException("No user found"));
         ClubEntity clubEntity = clubRepository.findById(clubId).orElseThrow(()-> new IllegalArgumentException("No club found"));
 
         userEntity.getClubEntity().add(clubEntity);
