@@ -11,16 +11,17 @@ import playfit.se.members.services.UserService;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
     private final UserEntityRepository userEntityRepository;
+
     @Override
-    public UserDetailsService userDetailsService(){
-        return new UserDetailsService(){
+    public UserDetailsService userDetailsService() {
+        return new UserDetailsService() {
             @Override
             public UserDetails loadUserByUsername(String username) {
                 return userEntityRepository.findUserByEmail(username)
-                        .orElseThrow(()-> new UsernameNotFoundException("User not found"));
+                        .orElseThrow(() -> new UsernameNotFoundException("User not found"));
             }
         };
     }

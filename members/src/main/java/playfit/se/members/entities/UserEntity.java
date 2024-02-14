@@ -7,12 +7,11 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import playfit.se.members.enums.Role;
 import playfit.se.members.token.Token;
 
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 
 @Entity
@@ -33,20 +32,16 @@ public class UserEntity implements UserDetails {
     private String personalNumber;
     private String gender;
     private String mobile;
-    private boolean accountStatus = false; // if it is active or deleted
-    private boolean loginStatus = false;  // if is online or not.
-    @ManyToMany
-    @JoinTable(
-            name = "UserEntityClubEntity",
-            joinColumns = @JoinColumn(name = "UserEntityId"),
-            inverseJoinColumns = @JoinColumn(name = "ClubEntityId")
-    )
-    private List<ClubEntity> clubEntity;
+    private boolean accountStatus = false;
+    private boolean loginStatus = false;
+    @ManyToOne
+    private ClubEntity clubEntity;
     @ManyToOne(cascade = CascadeType.ALL)
     private AddressEntity addressEntity;
 
-    @OneToMany(mappedBy = "user" )
-    private List<RoleEntity> roles;
+    @ElementCollection(targetClass = Role.class)
+    @Enumerated(EnumType.STRING)
+    private Set<Role> roles;
 
     @ManyToMany
     @JoinTable(
@@ -63,36 +58,33 @@ public class UserEntity implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<GrantedAuthority> authorities = new ArrayList<>();
-
-        for (RoleEntity role : this.roles) {
-            authorities.add(new SimpleGrantedAuthority(role.getType()));
-        }
-        return authorities;
+        return roles.stream()
+                .map(role -> new SimpleGrantedAuthority(role.name()))
+                .toList();
     }
 
     @Override
     public String getUsername() {
-        return null;
+        return email;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 }

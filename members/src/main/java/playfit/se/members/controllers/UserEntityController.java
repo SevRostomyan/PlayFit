@@ -10,25 +10,15 @@ import playfit.se.members.responses.UserRegistrationResponse;
 import playfit.se.members.services.UserEntityService;
 
 @RestController
-@RequestMapping("api/v1/user")
+@RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
 public class UserEntityController {
 
     final private UserEntityService userEntityService;
 
-    @PostMapping("/sign-up")
-    public ResponseEntity<String> signUp(@RequestBody SignUpUserEntityDTO signUpUserEntityDTO) {
-        UserRegistrationResponse response = userEntityService.signUp(signUpUserEntityDTO);
-        if (response.isSuccess()) {
-            // vi måste implementera notification (send an email)
-            return ResponseEntity.ok(response.getMessage());
-        } else {
-            return ResponseEntity.badRequest().body(response.getMessage());
-        }
-    }
-    @PutMapping("/add-club/{memberId}/{clubId}")
-    public ResponseEntity<String> addClub(@PathVariable Long memberId, @PathVariable Long clubId){
-        UserRegistrationResponse response = userEntityService.addClub(memberId, clubId);
+    @PostMapping("/sign-up/{clubId}")
+    public ResponseEntity<String> signUp(@PathVariable Long clubId, @RequestBody SignUpUserEntityDTO signUpUserEntityDTO) {
+        UserRegistrationResponse response = userEntityService.signUp(clubId, signUpUserEntityDTO);
         if (response.isSuccess()) {
             // vi måste implementera notification (send an email)
             return ResponseEntity.ok(response.getMessage());
@@ -38,14 +28,13 @@ public class UserEntityController {
     }
 
     // Vi behöver att lägga till förutsättningen att man har en godkänd konto.
-    @PostMapping("sign-in")
-    public ResponseEntity<String> signIn(@RequestBody SignInDTO signInDTO) {
-        UserLogInResponse response = userEntityService.signIn(signInDTO);
-        if (response.getMessage() !=null) {
+    @PostMapping("sign-in/{clubId}")
+    public ResponseEntity<String> signIn(@PathVariable Long clubId, @RequestBody SignInDTO signInDTO) {
+        UserLogInResponse response = userEntityService.signIn(clubId, signInDTO);
+        if (response.getMessage() != null) {
             // vi måste implementera notification (send an email)
             return ResponseEntity.ok(response.getMessage());
-        }
-        else{
+        } else {
             return ResponseEntity.badRequest().body("Something went wrong");
         }
     }
