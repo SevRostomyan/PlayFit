@@ -12,5 +12,4 @@ public class SignUpUserEntityDTO {
     private String gender;
     private String mobile;
     private AddressDTO addressDTO;
-    private Long orgId;
 }

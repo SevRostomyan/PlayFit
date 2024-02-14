@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import playfit.se.members.entities.UserEntity;
 
 import java.util.List;
 
@@ -19,8 +18,8 @@ public class ClubEntity {
     @SequenceGenerator(name = "clubGenerator", sequenceName = "clubSeq", allocationSize = 1)
     private Long id;
     private String orgNr;
-    private String orgName;
-    @ManyToMany (mappedBy = "clubEntity")
+    private String clubName;
+    @OneToMany(mappedBy = "clubEntity")
     private List<UserEntity> userEntities;
     private String address;
     private String zipCode;
