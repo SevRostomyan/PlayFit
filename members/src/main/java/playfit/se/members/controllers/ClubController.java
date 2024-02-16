@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import playfit.se.members.DTOs.SignUpClubDTO;
 import playfit.se.members.responses.ClubRegistrationResponse;
+import playfit.se.members.responses.ClubUpdateResponse;
 import playfit.se.members.services.ClubService;
 
 @RequestMapping("api/v1/clubs")
