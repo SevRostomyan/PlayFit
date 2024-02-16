@@ -15,12 +15,9 @@ public class ActivityGroupEntity {
     @Id
     @GeneratedValue
     private Long id;
-
-    private String SportName; //ändra till aktivitetsNamn
-    private int numberOfSessions;
-
-    @OneToOne
-    private AttendanceEntity attendanceEntity;
-    @OneToMany (mappedBy = "activityGroupEntity") // we wonder about if it can be many to many
-    private List<UserEntity> userEntity;
+    private String activityName;
+    @ManyToMany(mappedBy = "activityGroups")
+    private List<UserEntity> users;
+    @OneToMany(mappedBy = "activityGroupEntity")
+    private List<SessionEntity> sessionEntities;
 }

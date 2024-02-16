@@ -1,28 +1,26 @@
 package playfit.se.members.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AttendanceEntity {
+public class SessionEntity {
     @Id
     @GeneratedValue
     private Long id;
+    private String nameOfSession;
     private LocalDate passDate;
     private boolean isPresent;
-
-    @OneToOne
-    private UserEntity userEntity;
-    @OneToOne
+    @ElementCollection
+    private List<Long> userId;
+    @ManyToOne
     private ActivityGroupEntity activityGroupEntity;
 }
