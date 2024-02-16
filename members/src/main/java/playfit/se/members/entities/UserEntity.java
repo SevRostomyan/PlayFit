@@ -51,8 +51,13 @@ public class UserEntity implements UserDetails {
     )
     private List<GuardianEntity> guardianEntityList;
     //    private Long orgId;
-    @ManyToOne
-    private ActivityGroupEntity activityGroupEntity;
+    @ManyToMany
+    @JoinTable(
+            name = "user_activity_group",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "activity_group_id")
+    )
+    private List<ActivityGroupEntity> activityGroups;
     @OneToMany(mappedBy = "userEntity")
     private List<Token> tokens;
 
