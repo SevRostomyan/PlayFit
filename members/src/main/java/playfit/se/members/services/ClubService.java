@@ -11,6 +11,7 @@ import playfit.se.members.repositories.AddressRepository;
 import playfit.se.members.repositories.ClubRepository;
 import playfit.se.members.repositories.UserEntityRepository;
 import playfit.se.members.responses.ClubRegistrationResponse;
+import playfit.se.members.responses.ClubUpdateResponse;
 
 
 import java.util.Optional;
