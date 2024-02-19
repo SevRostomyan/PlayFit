@@ -14,9 +14,12 @@ import playfit.se.members.entities.UserEntity;
 import playfit.se.members.enums.Role;
 import playfit.se.members.repositories.AddressRepository;
 import playfit.se.members.repositories.ClubRepository;
+import playfit.se.members.repositories.TokenRepository;
 import playfit.se.members.repositories.UserEntityRepository;
 import playfit.se.members.responses.UserLogInResponse;
 import playfit.se.members.responses.UserRegistrationResponse;
+import playfit.se.members.token.Token;
+import playfit.se.members.token.TokenType;
 
 import java.util.Optional;
 import java.util.Set;
@@ -31,6 +34,7 @@ public class UserEntityService {
     private final AuthenticationManager authenticationManager;
     private final JWTService jwtService;
     private final AddressRepository addressRepository;
+    private final TokenRepository tokenRepository;
 
 
     public UserRegistrationResponse signUp(Long clubId, SignUpUserEntityDTO signUpUserEntityDTO) {
@@ -90,8 +94,17 @@ public class UserEntityService {
             try {
                 authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signInDTO.getEmail(), signInDTO.getPassword()));
                 existingUser.setLoginStatus(true);
-                userEntityRepository.save(existingUser);
+                var savedUser = userEntityRepository.save(existingUser);
+                revokeAllUserTokens(existingUser);
                 var jwt = jwtService.generateToken(existingUser);
+                var token = Token.builder()
+                        .userEntity(savedUser)
+                        .token(jwt)
+                        .tokenType(TokenType.BEARER)
+                        .revoked(false)
+                        .expired(false)
+                        .build();
+                tokenRepository.save(token);
                 response.setSuccess(true);
                 response.setMessage("You have successfully logged in.");
                 response.setToken(jwt);
@@ -101,5 +114,16 @@ public class UserEntityService {
             }
         }
         return response;
+    }
+
+    private void revokeAllUserTokens(UserEntity userEntity) {
+        var validUserTokens = tokenRepository.findAllValidTokensByUserId(userEntity.getId());
+        if (validUserTokens.isEmpty())
+            return;
+        validUserTokens.forEach(token -> {
+            token.setExpired(true);
+            token.setRevoked(true);
+        });
+        tokenRepository.saveAll(validUserTokens);
     }
 }
