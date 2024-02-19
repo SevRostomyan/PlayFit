@@ -28,7 +28,7 @@ public class UserEntityController {
     }
 
     // Vi behöver att lägga till förutsättningen att man har en godkänd konto.
-    @PostMapping("sign-in/{clubId}")
+    @PostMapping("/sign-in/{clubId}")
     public ResponseEntity<String> signIn(@PathVariable Long clubId, @RequestBody SignInDTO signInDTO) {
         UserLogInResponse response = userEntityService.signIn(clubId, signInDTO);
         if (response.getMessage() != null) {

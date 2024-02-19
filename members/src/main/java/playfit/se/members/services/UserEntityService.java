@@ -89,11 +89,12 @@ public class UserEntityService {
         } else {
             try {
                 authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signInDTO.getEmail(), signInDTO.getPassword()));
-                var jwt = jwtService.generateToken(existingUser);
                 existingUser.setLoginStatus(true);
                 userEntityRepository.save(existingUser);
+                var jwt = jwtService.generateToken(existingUser);
                 response.setSuccess(true);
-                response.setMessage(jwt);
+                response.setMessage("You have successfully logged in.");
+                response.setToken(jwt);
             } catch (AuthenticationException e) {
                 response.setSuccess(false);
                 response.setMessage("Authentication failed.");
