@@ -3,6 +3,7 @@ package playfit.se.members.controllers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import playfit.se.members.DTOs.InfoClubDTO;
 import playfit.se.members.DTOs.SignUpClubDTO;
 import playfit.se.members.responses.ClubRegistrationResponse;
 import playfit.se.members.responses.ClubUpdateResponse;
@@ -25,4 +26,13 @@ public class ClubController {
         }
     }
 
+    @PostMapping("/update-club-info/{clubId}")
+    public ResponseEntity<String> updateClubInfo(@PathVariable Long clubId, @RequestBody InfoClubDTO infoClubDTO) {
+        ClubUpdateResponse response = clubService.updateClubInfo(clubId, infoClubDTO);
+        if (response.isSuccess()) {
+            return ResponseEntity.ok(response.getMessage());
+        } else {
+            return ResponseEntity.badRequest().body(response.getMessage());
+        }
+    }
 }

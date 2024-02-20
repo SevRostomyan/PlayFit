@@ -2,6 +2,7 @@ package playfit.se.members.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import playfit.se.members.DTOs.InfoClubDTO;
 import playfit.se.members.DTOs.SignUpClubDTO;
 import playfit.se.members.entities.AddressEntity;
 import playfit.se.members.entities.ClubEntity;
@@ -25,6 +26,7 @@ public class ClubService {
     private final UserEntityRepository userEntityRepository;
     private final UserEntityService userEntityService;
     private final AddressRepository addressRepository;
+
 
     public ClubRegistrationResponse createClub(SignUpClubDTO signUpClubDTO) {
         Optional<ClubEntity> existingClubEntity = clubRepository.findByOrgNr(signUpClubDTO.getOrgNr());
@@ -62,4 +64,38 @@ public class ClubService {
         clubEntity.setClubName(signUpClubDTO.getClubName());
         return clubEntity;
     }
+
+
+    public ClubUpdateResponse updateClubInfo(Long clubId, InfoClubDTO infoClubDTO) {
+        Optional<ClubEntity> clubEntityOptional = clubRepository.findById(clubId);
+        ClubUpdateResponse response = new ClubUpdateResponse();
+        if (clubEntityOptional.isPresent()) {
+            ClubEntity clubEntity = clubEntityOptional.get();
+            clubEntity.setClubName(infoClubDTO.getOrgName());
+            clubEntity.setAddress(infoClubDTO.getAddress());
+            clubEntity.setZipCode(infoClubDTO.getZipCode());
+            clubEntity.setCity(infoClubDTO.getCity());
+            clubEntity.setMobile(infoClubDTO.getMobile());
+
+            clubRepository.save(clubEntity);
+            response.setSuccess(true);
+            response.setMessage("You have successfully updated the club.");
+        } else {
+            response.setSuccess(false);
+            response.setMessage("Something went wrong, couldn't update club");
+
+        }
+        return response;
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
