@@ -11,6 +11,7 @@ import playfit.se.members.repositories.ActivityGroupRepository;
 import playfit.se.members.repositories.SessionRepository;
 import playfit.se.members.repositories.UserEntityRepository;
 import playfit.se.members.responses.AddNewUserToGroupResponse;
+import playfit.se.members.responses.AddTrainerToActivityGroupResponse;
 import playfit.se.members.responses.CreateActivityResponse;
 import playfit.se.members.responses.CreateSessionResponse;
 
@@ -76,6 +77,25 @@ public class ActivityGroupService {
         response.setSuccess(true);
         response.setMessage("Added member to group");
 
+        return response;
+    }
+
+    public AddTrainerToActivityGroupResponse addTrainerToActivityGroup(Long activityGroupId, Long userId) {
+        AddTrainerToActivityGroupResponse response = new AddTrainerToActivityGroupResponse();
+        ActivityGroupEntity activityGroup = activityGroupRepository.findById(activityGroupId)
+                .orElseThrow(() -> new IllegalArgumentException("Activity group not found"));
+        UserEntity userEntity = userEntityRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+
+        activityGroup.getTrainers().add(userEntity);
+        userEntity.getTrainerForGroups().add(activityGroup);
+
+        activityGroupRepository.save(activityGroup);
+        userEntityRepository.save(userEntity);
+
+        response.setSuccess(true);
+        response.setMessage("Added member to group");
         return response;
     }
 

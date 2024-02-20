@@ -80,7 +80,6 @@ public class UserEntityService {
         var existingUser = userEntityRepository.findByEmailAndClubId(signInDTO.getEmail(), clubId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid email or password!"));
 
-
         UserLogInResponse response = new UserLogInResponse();
 
         if (!existingUser.isAccountStatus()) {
@@ -89,9 +88,9 @@ public class UserEntityService {
         } else {
             try {
                 authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signInDTO.getEmail(), signInDTO.getPassword()));
-                var jwt = jwtService.generateToken(existingUser);
                 existingUser.setLoginStatus(true);
                 userEntityRepository.save(existingUser);
+                var jwt = jwtService.generateToken(existingUser);
                 response.setSuccess(true);
                 response.setMessage(jwt);
             } catch (AuthenticationException e) {

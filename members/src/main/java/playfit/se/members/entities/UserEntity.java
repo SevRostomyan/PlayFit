@@ -58,6 +58,8 @@ public class UserEntity implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "activity_group_id")
     )
     private List<ActivityGroupEntity> activityGroups;
+    @ManyToMany(mappedBy = "trainers")
+    private List<ActivityGroupEntity> trainerForGroups;
     @OneToMany(mappedBy = "userEntity")
     private List<Token> tokens;
 

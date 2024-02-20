@@ -15,9 +15,20 @@ public class ActivityGroupEntity {
     @Id
     @GeneratedValue
     private Long id;
+
     private String activityName;
+
     @ManyToMany(mappedBy = "activityGroups")
     private List<UserEntity> users;
+
     @OneToMany(mappedBy = "activityGroupEntity")
     private List<SessionEntity> sessionEntities;
+
+    @ManyToMany
+    @JoinTable(
+            name = "activity_group_trainers",
+            joinColumns = @JoinColumn(name = "activity_group_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private List<UserEntity> trainers;
 }
