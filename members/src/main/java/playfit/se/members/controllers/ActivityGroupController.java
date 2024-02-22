@@ -5,17 +5,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import playfit.se.members.DTOs.ActivityGroupDTO;
 import playfit.se.members.DTOs.SessionDTO;
+import playfit.se.members.entities.ActivityGroupEntity;
+import playfit.se.members.repositories.ActivityGroupRepository;
 import playfit.se.members.responses.AddNewUserToGroupResponse;
 import playfit.se.members.responses.AddTrainerToActivityGroupResponse;
 import playfit.se.members.responses.CreateActivityResponse;
 import playfit.se.members.responses.CreateSessionResponse;
 import playfit.se.members.services.ActivityGroupService;
 
+import java.util.List;
+
 @RequestMapping("/api/v1/activities-group")
 @RestController
 @RequiredArgsConstructor
 public class ActivityGroupController {
     private final ActivityGroupService activityGroupService;
+    private final ActivityGroupRepository activityGroupRepository;
     @PostMapping("/create-activity")
     public ResponseEntity<String> createActivity(@RequestBody ActivityGroupDTO activityGroupDTO){
         CreateActivityResponse response = activityGroupService.createActivity(activityGroupDTO);
@@ -56,6 +61,11 @@ public class ActivityGroupController {
         } else {
             return ResponseEntity.badRequest().body(response.getMessage());
         }
+    }
+
+    @GetMapping("/list")
+    public List<ActivityGroupEntity> getActivityGroups() {
+        return activityGroupRepository.findAll().stream().toList();
     }
 
 }

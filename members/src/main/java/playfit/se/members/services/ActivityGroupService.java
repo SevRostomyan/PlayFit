@@ -1,6 +1,7 @@
 package playfit.se.members.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import playfit.se.members.DTOs.ActivityGroupDTO;
 import playfit.se.members.DTOs.SessionDTO;
@@ -15,6 +16,7 @@ import playfit.se.members.responses.AddTrainerToActivityGroupResponse;
 import playfit.se.members.responses.CreateActivityResponse;
 import playfit.se.members.responses.CreateSessionResponse;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,18 +49,27 @@ public class ActivityGroupService {
 
         CreateSessionResponse response = new CreateSessionResponse();
         SessionEntity sessionEntity = new SessionEntity();
-        sessionEntity.setNameOfSession(sessionDTO.getNameOfSession());
-
         Optional<ActivityGroupEntity> activityGroupOptional = activityGroupRepository.findById(activityId);
+
+
+
+
         if (activityGroupOptional.isPresent()) {
-            sessionEntity.setActivityGroupEntity(activityGroupOptional.get());
+            ActivityGroupEntity activityGroupEntity = activityGroupOptional.get();
+            List<SessionEntity> sessions = activityGroupEntity.getSessionEntities();
+            sessionEntity.setNameOfSession(sessionDTO.getNameOfSession());
+            sessionEntity.setActivityGroupEntity(activityGroupEntity);
+            sessionRepository.save(sessionEntity);
+
+            sessions.add(sessionEntity);
+
+            activityGroupEntity.setSessionEntities(sessions);
+            activityGroupRepository.save(activityGroupEntity);
+            response.setSuccess(true);
+            response.setMessage("Created a new activity group!");
         } else {
             throw new IllegalArgumentException("Activity not found");
         }
-
-        sessionRepository.save(sessionEntity);
-        response.setSuccess(true);
-        response.setMessage("Created a new activity group!");
 
         return response;
     }
