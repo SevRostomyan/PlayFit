@@ -25,14 +25,20 @@ public class InvoiceEntity {
     @ManyToOne
     private UserEntity userEntity;
 
-    //@ManyToOne
-    //private Subscription TrainingSubscription;  //The trainings that students pay for on monthly or yearly basis
+    @ManyToOne
+    private ClubEntity clubEntity;
+
+    @ManyToOne
+    private SubscriptionEntity subscriptionEntity;
 
     private Double totaltAmount;
     private Double priceExclVAT;
     private LocalDate invoiceDate;
     private String dueDate;
 
+    private String invoiceStatus; // "PAID", "UNPAID"
+    private String paymentMethod; // "CREDIT_CARD", "BANK_TRANSFER"
+    private Double discount; // Discount applied to the invoice
 
     // Organisational details
     private String ClubName;
