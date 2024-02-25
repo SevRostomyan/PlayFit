@@ -12,15 +12,29 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "session_data")
 public class SessionEntity {
     @Id
     @GeneratedValue
     private Long id;
     private String nameOfSession;
     private LocalDate passDate;
-    private boolean isPresent;
-    @ElementCollection
-    private List<Long> userId;
+
+    @OneToMany(mappedBy = "session")
+    private List<Attendance> attendances;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_session_data",
+            joinColumns = @JoinColumn(name = "session_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private List<UserEntity> users;
+
     @ManyToOne
     private ActivityGroupEntity activityGroupEntity;
+    @ManyToOne
+    private PricingEntity pricing;
+
+
 }

@@ -18,14 +18,21 @@ public class SubscriptionEntity {
     private Long id;
 
     private String type; // "INDIVIDUAL", "FAMILY"
-    private Double price;
+
+    @ManyToOne
+    private PricingEntity pricing;
+
     private Integer durationInMonths;
 
     @ManyToMany
     @JoinTable(
-            name = "subscription_activity_groups",
+            name = "user_subscriptions",
             joinColumns = @JoinColumn(name = "subscription_id"),
-            inverseJoinColumns = @JoinColumn(name = "activity_group_id")
+            inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    private List<ActivityGroupEntity> linkedActivities; // Linked activities to this subscription
+    private List<UserEntity> users; // Users subscribed to this subscription
+
+    // Linked activities can be optional based on your application logic
+    // private List<ActivityGroupEntity> linkedActivities;
+
 }

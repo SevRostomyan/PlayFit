@@ -18,6 +18,9 @@ public class ActivityGroupEntity {
 
     private String activityName;
 
+    @ManyToOne
+    private PricingEntity pricing;
+
     @ManyToMany(mappedBy = "activityGroups")
     private List<UserEntity> users;
 
