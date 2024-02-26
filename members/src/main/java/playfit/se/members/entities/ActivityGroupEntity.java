@@ -21,7 +21,7 @@ public class ActivityGroupEntity {
     @ManyToMany(mappedBy = "activityGroups")
     private List<UserEntity> users;
 
-    @OneToMany(mappedBy = "activityGroupEntity")
+    @OneToMany(mappedBy = "activityGroupEntity", cascade = CascadeType.ALL)
     private List<SessionEntity> sessionEntities;
 
     @ManyToMany

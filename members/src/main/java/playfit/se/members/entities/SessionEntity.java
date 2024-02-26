@@ -19,8 +19,8 @@ public class SessionEntity {
     private String nameOfSession;
     private LocalDate passDate;
     private boolean isPresent;
-    @ElementCollection
-    private List<Long> userId;
+//    @ElementCollection
+//    private List<Long> userId;
     @ManyToOne
     private ActivityGroupEntity activityGroupEntity;
 }
