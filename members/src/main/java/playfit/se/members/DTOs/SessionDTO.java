@@ -11,6 +11,7 @@ import java.util.List;
 @Data
 public class SessionDTO {
 
+    private Long id;
     private String nameOfSession;
     private LocalDate passDate;
     private boolean isPresent;
