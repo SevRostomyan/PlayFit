@@ -14,6 +14,45 @@ import java.io.FileNotFoundException;
 public class InvoiceController {
     private final InvoiceService invoiceService;
 
+
+
+    @PostMapping("/generate/monthly/{userId}")
+    public ResponseEntity<?> generateMonthlyInvoice(@PathVariable Long userId) {
+        try {
+            String invoiceFilePath = invoiceService.generateMonthlyInvoice(userId);
+            return ResponseEntity.ok("Monthly invoice generated successfully. Stored at: " + invoiceFilePath);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/generate/single/{sessionId}")
+    public ResponseEntity<?> generateSingleSessionInvoice(@PathVariable Long sessionId) {
+        try {
+            String invoiceFilePath = invoiceService.generateSingleSessionInvoice(sessionId);
+            return ResponseEntity.ok("Single session invoice generated successfully. Stored at: " + invoiceFilePath);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     /*@PostMapping("/generate/monthly/{userId}")
     public ResponseEntity<?> generateMonthlyInvoice(@PathVariable Long userId) {
         try {
@@ -36,4 +75,4 @@ public class InvoiceController {
             return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
         }
     }*/
-}
+

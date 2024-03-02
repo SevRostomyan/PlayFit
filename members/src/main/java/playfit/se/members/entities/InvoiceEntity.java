@@ -49,4 +49,8 @@ public class InvoiceEntity {
     private String memberFirstName;
     private String memberLastName;
     private String memberEmail;
+
+
+    @ManyToOne
+    private SessionEntity sessionEntity;
 }
