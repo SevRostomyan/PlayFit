@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import playfit.se.members.enums.SubscriptionType;
 
 import java.util.List;
 
@@ -11,13 +12,15 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Table
 public class SubscriptionEntity {
 
     @Id
     @GeneratedValue
     private Long id;
 
-    private String type; // "INDIVIDUAL", "FAMILY"
+    @Enumerated(EnumType.STRING)
+    private SubscriptionType type; // "INDIVIDUAL", "FAMILY", STUDENT
 
     @ManyToOne
     private PricingEntity pricing;

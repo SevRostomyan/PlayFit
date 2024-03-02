@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Table
 public class InvoiceEntity {
     @Id
     @GeneratedValue

@@ -9,9 +9,9 @@ import java.util.List;
 
 @Entity
 @Data
-@Table
 @NoArgsConstructor
 @AllArgsConstructor
+@Table
 public class ClubEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "clubGenerator")
