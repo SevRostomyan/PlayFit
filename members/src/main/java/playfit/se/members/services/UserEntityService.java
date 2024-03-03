@@ -125,4 +125,16 @@ public class UserEntityService {
         });
         tokenRepository.saveAll(validUserTokens);
     }
+
+    public void updateUserRoles(Long userId, Set<Role> newRoles) {
+        // Fetch the user entity from the database
+        UserEntity user = userEntityRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+
+        // Update the roles of the user entity
+        user.setRoles(newRoles);
+
+        // Save the updated user entity back to the database
+        userEntityRepository.save(user);
+    }
 }

@@ -1,16 +1,22 @@
 package playfit.se.members.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import playfit.se.members.DTOs.SignInDTO;
 import playfit.se.members.DTOs.SignUpUserEntityDTO;
+import playfit.se.members.entities.UserEntity;
+import playfit.se.members.enums.Role;
+import playfit.se.members.repositories.UserEntityRepository;
 import playfit.se.members.responses.UserLogInResponse;
 import playfit.se.members.responses.UserRegistrationResponse;
 import playfit.se.members.services.EmailService;
 import playfit.se.members.services.UserEntityService;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -54,4 +60,15 @@ public class UserEntityController {
                                           @RequestParam String content) {
         return emailService.sendMultipleSimpleEmail(toList, subject, content);
     }
+
+    @PutMapping("/changeRoles/{userId}")
+    public void updateUserRoles(@PathVariable Long userId, @RequestBody Set<Role> newRoles) {
+        userEntityService.updateUserRoles(userId, newRoles);
+    }
+
 }
+
+
+
+
+

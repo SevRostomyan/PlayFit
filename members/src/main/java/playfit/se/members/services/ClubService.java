@@ -15,8 +15,10 @@ import playfit.se.members.responses.ClubRegistrationResponse;
 import playfit.se.members.responses.ClubUpdateResponse;
 
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -87,11 +89,23 @@ public class ClubService {
         }
         return response;
     }
+
+    public List<InfoClubDTO> getAllInfoClubs() {
+        List<ClubEntity> clubs = clubRepository.findAll();
+        return clubs.stream().map(this::covertToClubInfoDTO).collect(Collectors.toList());
+    }
+
+    private InfoClubDTO covertToClubInfoDTO(ClubEntity clubEntity) {
+        InfoClubDTO clubInfoDTO = new InfoClubDTO();
+        clubInfoDTO.setOrgName(clubEntity.getClubName());
+        clubInfoDTO.setAddress(clubEntity.getAddress());
+        clubInfoDTO.setZipCode(clubEntity.getZipCode());
+        clubInfoDTO.setCity(clubEntity.getCity());
+        clubInfoDTO.setMobile(clubEntity.getMobile());
+        return clubInfoDTO;
+    }
+
 }
-
-
-
-
 
 
 
