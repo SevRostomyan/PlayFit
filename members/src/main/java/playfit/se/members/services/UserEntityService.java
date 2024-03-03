@@ -106,7 +106,7 @@ public class UserEntityService {
                 tokenRepository.save(token);
                 response.setSuccess(true);
                 response.setMessage("You have successfully logged in.");
-                response.setToken(jwt);
+                response.setAccessToken(jwt);
             } catch (AuthenticationException e) {
                 response.setSuccess(false);
                 response.setMessage("Authentication failed.");
@@ -125,7 +125,6 @@ public class UserEntityService {
         });
         tokenRepository.saveAll(validUserTokens);
     }
-
     public void updateUserRoles(Long userId, Set<Role> newRoles) {
         // Fetch the user entity from the database
         UserEntity user = userEntityRepository.findById(userId)

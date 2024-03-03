@@ -14,9 +14,11 @@ import java.util.List;
 @RequestMapping("/api/v1/clubs")
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin
 public class ClubController {
 
     private final ClubService clubService;
+
 
     @PostMapping("/create-club")
     public ResponseEntity<String> createClub(@RequestBody SignUpClubDTO signUpClubDTO) {

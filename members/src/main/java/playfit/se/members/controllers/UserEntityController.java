@@ -38,14 +38,15 @@ public class UserEntityController {
     }
 
     // Vi behöver att lägga till förutsättningen att man har en godkänd konto.
+    @CrossOrigin
     @PostMapping("/sign-in/{clubId}")
-    public ResponseEntity<String> signIn(@PathVariable Long clubId, @RequestBody SignInDTO signInDTO) {
+    public UserLogInResponse signIn(@PathVariable Long clubId, @RequestBody SignInDTO signInDTO) {
         UserLogInResponse response = userEntityService.signIn(clubId, signInDTO);
         if (response.getMessage() != null) {
             // vi måste implementera notification (send an email)
-            return ResponseEntity.ok(response.getMessage());
+            return response;
         } else {
-            return ResponseEntity.badRequest().body("Something went wrong");
+            return response;
         }
     }
 
