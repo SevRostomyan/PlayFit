@@ -1,13 +1,13 @@
 package playfit.se.members.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.stereotype.Service;
 import playfit.se.members.DTOs.ActivityGroupDTO;
 import playfit.se.members.DTOs.SessionDTO;
-import playfit.se.members.entities.ActivityGroupEntity;
-import playfit.se.members.entities.SessionEntity;
-import playfit.se.members.entities.UserEntity;
+import playfit.se.members.entities.*;
 import playfit.se.members.repositories.ActivityGroupRepository;
+import playfit.se.members.repositories.PricingRepository;
 import playfit.se.members.repositories.SessionRepository;
 import playfit.se.members.repositories.UserEntityRepository;
 import playfit.se.members.responses.AddNewUserToGroupResponse;
@@ -24,6 +24,7 @@ public class ActivityGroupService {
 
     private final ActivityGroupRepository activityGroupRepository;
     private final SessionRepository sessionRepository;
+    private final PricingRepository pricingRepository;
     private final UserEntityRepository userEntityRepository;
 
     public CreateActivityResponse createActivity(ActivityGroupDTO activityGroupDTO) {
@@ -46,20 +47,35 @@ public class ActivityGroupService {
     public CreateSessionResponse createSession(SessionDTO sessionDTO, Long activityId) {
 
         CreateSessionResponse response = new CreateSessionResponse();
-        SessionEntity sessionEntity = new SessionEntity();
-        sessionEntity.setNameOfSession(sessionDTO.getNameOfSession());
+        try {
+            SessionEntity sessionEntity = new SessionEntity();
+            sessionEntity.setNameOfSession(sessionDTO.getNameOfSession());
+            sessionEntity.setPassDate(sessionDTO.getPassDate());
 
-        Optional<ActivityGroupEntity> activityGroupOptional = activityGroupRepository.findById(activityId);
-        if (activityGroupOptional.isPresent()) {
-            sessionEntity.setActivityGroupEntity(activityGroupOptional.get());
-        } else {
-            throw new IllegalArgumentException("Activity not found");
+            ActivityGroupEntity activityGroup = activityGroupRepository.findById(activityId)
+                    .orElseThrow(() -> new IllegalArgumentException("Activity not found"));
+            sessionEntity.setActivityGroupEntity(activityGroup);
+
+            PricingEntity pricing = pricingRepository.findById(sessionDTO.getPricingId())
+                    .orElseThrow(() -> new IllegalArgumentException("Pricing not found"));
+            sessionEntity.setPricing(pricing);
+
+            // Handling user attendance
+            List<UserEntity> users = userEntityRepository.findAllById(sessionDTO.getUserIds());
+            for (UserEntity user : users) {
+                Attendance attendance = new Attendance();
+                attendance.setUser(user);
+                attendance.setSession(sessionEntity);
+                sessionEntity.getAttendances().add(attendance);
+            }
+
+            sessionRepository.save(sessionEntity);
+            response.setSuccess(true);
+            response.setMessage("Session created successfully!");
+        } catch (Exception e) {
+            response.setSuccess(false);
+            response.setMessage("Failed to create session: " + e.getMessage());
         }
-
-        sessionRepository.save(sessionEntity);
-        response.setSuccess(true);
-        response.setMessage("Created a new activity group!");
-
         return response;
     }
 

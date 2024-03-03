@@ -9,6 +9,9 @@ import playfit.se.members.repositories.PricingRepository;
 import playfit.se.members.repositories.SubscriptionRepository;
 import playfit.se.members.enums.SubscriptionType;
 import playfit.se.members.repositories.UserEntityRepository;
+import playfit.se.members.responses.AllSubscriptionsResponse;
+import playfit.se.members.responses.AssignSubscriptionResponse;
+import playfit.se.members.responses.CreateSubscriptionResponse;
 
 import java.util.List;
 
@@ -20,29 +23,51 @@ public class SubscriptionService {
     private final PricingRepository pricingRepository;
     private final UserEntityRepository userEntityRepository;
 
-    public SubscriptionEntity createSubscription(SubscriptionType  type, Long pricingId, Integer durationInMonths) {
-        PricingEntity pricing = pricingRepository.findById(pricingId)
-                .orElseThrow(() -> new IllegalArgumentException("Pricing not found"));
+    public CreateSubscriptionResponse createSubscription(SubscriptionType type, Long pricingId, Integer durationInMonths) {
+        try {
+            PricingEntity pricing = pricingRepository.findById(pricingId)
+                    .orElseThrow(() -> new IllegalArgumentException("Pricing not found"));
 
-        SubscriptionEntity subscription = new SubscriptionEntity();
-        subscription.setType(type); // Use the enum type here
-        subscription.setPricing(pricing); // Link to the selected PricingEntity
-        subscription.setDurationInMonths(durationInMonths);
-        return subscriptionRepository.save(subscription);
+            SubscriptionEntity subscription = new SubscriptionEntity();
+            subscription.setType(type);
+            subscription.setPricing(pricing);
+            subscription.setDurationInMonths(durationInMonths);
+
+            SubscriptionEntity savedSubscription = subscriptionRepository.save(subscription);
+            return new CreateSubscriptionResponse(true, "Subscription created successfully", savedSubscription);
+        } catch (Exception e) {
+            return new CreateSubscriptionResponse(false, "Failed to create subscription: " + e.getMessage(), null);
+        }
     }
 
-    public List<SubscriptionEntity> getAllSubscriptions() {
-        return subscriptionRepository.findAll();
+    public AllSubscriptionsResponse getAllSubscriptions() {
+        try {
+            List<SubscriptionEntity> subscriptions = subscriptionRepository.findAll();
+            return new AllSubscriptionsResponse(true, "Subscriptions fetched successfully", subscriptions);
+        } catch (Exception e) {
+            return new AllSubscriptionsResponse(false, "Failed to fetch subscriptions: " + e.getMessage(), null);
+        }
     }
 
-    public void assignSubscriptionToUser(Long userId, Long subscriptionId) {
-        UserEntity user = userEntityRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+    public AssignSubscriptionResponse assignSubscriptionToUser(Long userId, Long subscriptionId) {
+        AssignSubscriptionResponse response = new AssignSubscriptionResponse();
+        try {
+            UserEntity user = userEntityRepository.findById(userId)
+                    .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        SubscriptionEntity subscription = subscriptionRepository.findById(subscriptionId)
-                .orElseThrow(() -> new IllegalArgumentException("Subscription not found"));
+            SubscriptionEntity subscription = subscriptionRepository.findById(subscriptionId)
+                    .orElseThrow(() -> new IllegalArgumentException("Subscription not found"));
 
-        user.getSubscriptions().add(subscription);
-        userEntityRepository.save(user);
+            user.getSubscriptions().add(subscription);
+            userEntityRepository.save(user);
+
+            response.setSuccess(true);
+            response.setMessage("Subscription assigned successfully");
+        } catch (Exception e) {
+            response.setSuccess(false);
+            response.setMessage("Failed to assign subscription: " + e.getMessage());
+        }
+        return response;
     }
 }
+

@@ -26,15 +26,12 @@ public class ActivityGroupController {
         }
     }
 
-    @PostMapping("create-session/{activityId}")
-    public ResponseEntity<String> createSession(@RequestBody SessionDTO sessionDTO, @PathVariable Long activityId){
+    @PostMapping("/create-session/{activityId}")
+    public ResponseEntity<CreateSessionResponse> createSession(@RequestBody SessionDTO sessionDTO, @PathVariable Long activityId) {
         CreateSessionResponse response = activityGroupService.createSession(sessionDTO, activityId);
-        if (response.isSuccess()) {
-            return ResponseEntity.ok(response.getMessage());
-        } else {
-            return ResponseEntity.badRequest().body(response.getMessage());
-        }
+        return response.isSuccess() ? ResponseEntity.ok(response) : ResponseEntity.badRequest().body(response);
     }
+
 
     @PostMapping("/addUsersToActivityGroup/{activityGroupId}")
     public ResponseEntity<String> addUsersToActivityGroup(@PathVariable Long activityGroupId, @RequestBody ActivityGroupDTO activityGroupDTO) {

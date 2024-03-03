@@ -4,9 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import playfit.se.members.entities.InvoiceEntity;
+import playfit.se.members.responses.InvoiceGenerationResponse;
 import playfit.se.members.services.InvoiceService;
 
 import java.io.FileNotFoundException;
+import java.util.List;
 
 @RequestMapping("/api/v1/Invoices")
 @RestController
@@ -17,24 +19,25 @@ public class InvoiceController {
 
 
     @PostMapping("/generate/monthly/{userId}")
-    public ResponseEntity<?> generateMonthlyInvoice(@PathVariable Long userId) {
-        try {
-            String invoiceFilePath = invoiceService.generateMonthlyInvoice(userId);
-            return ResponseEntity.ok("Monthly invoice generated successfully. Stored at: " + invoiceFilePath);
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
-        }
+    public ResponseEntity<List<InvoiceGenerationResponse>> generateMonthlyInvoices(@PathVariable Long userId) throws FileNotFoundException {
+        List<InvoiceGenerationResponse> responses = invoiceService.generateMonthlyInvoices(userId);
+        return ResponseEntity.ok(responses); // Respond with a list of responses
     }
 
-    @PostMapping("/generate/single/{sessionId}")
-    public ResponseEntity<?> generateSingleSessionInvoice(@PathVariable Long sessionId) {
-        try {
-            String invoiceFilePath = invoiceService.generateSingleSessionInvoice(sessionId);
-            return ResponseEntity.ok("Single session invoice generated successfully. Stored at: " + invoiceFilePath);
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
-        }
+    //For all users in a single session
+    @PostMapping("/generate-for-session/{sessionId}")
+    public ResponseEntity<List<InvoiceGenerationResponse>> generateInvoicesForSession(@PathVariable Long sessionId) throws FileNotFoundException {
+        List<InvoiceGenerationResponse> responses = invoiceService.generateInvoicesForSession(sessionId);
+        return ResponseEntity.ok(responses);
     }
+
+    //For a single user in a single session
+    @PostMapping("/generate-for-user/{userId}/in-session/{sessionId}")
+    public ResponseEntity<InvoiceGenerationResponse> generateInvoiceForUserInSession(@PathVariable Long userId, @PathVariable Long sessionId) throws FileNotFoundException {
+        InvoiceGenerationResponse response = invoiceService.generateInvoiceForUserInSession(userId, sessionId);
+        return response.isSuccess() ? ResponseEntity.ok(response) : ResponseEntity.badRequest().body(response);
+    }
+
 }
 
 
