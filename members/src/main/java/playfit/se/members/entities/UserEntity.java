@@ -63,8 +63,8 @@ public class UserEntity implements UserDetails {
     @OneToMany(mappedBy = "userEntity")
     private List<Token> tokens;
 
-    @ManyToMany(mappedBy = "users")
-    private List<SubscriptionEntity> subscriptions;
+    @ManyToOne
+    private SubscriptionEntity subscription;
 
 
     @OneToMany(mappedBy = "user")

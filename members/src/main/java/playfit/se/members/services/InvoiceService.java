@@ -19,9 +19,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +40,8 @@ public class InvoiceService {
             UserEntity user = userEntityRepository.findById(userId)
                     .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-            for (SubscriptionEntity subscription : user.getSubscriptions()) {
+            SubscriptionEntity subscription = user.getSubscription();
+            if (subscription != null) {
                 InvoiceEntity invoice = createInvoiceForSubscription(user, subscription);
                 String filePath = generateAndStoreInvoice(invoice);
                 responses.add(new InvoiceGenerationResponse(true, "Monthly invoice generated for subscription " + subscription.getId(), filePath));
@@ -67,13 +70,21 @@ public class InvoiceService {
         invoice.setOrganizationAddress(club.getAddress() + ", " + club.getZipCode() + " " + club.getCity());
         invoice.setTotaltAmount(subscription.getPricing().getPrice());
 
-        // Additional fields like invoice number, date, due date, etc., should be set here
+        // Generate a unique invoice number
+        String invoiceNumber = generateInvoiceNumber();
+        invoice.setInvoiceNum(invoiceNumber);
+        invoice.setInvoiceDate(LocalDate.now());
+        invoice.setDueDate(String.valueOf(LocalDate.now().plusDays(30))); //
 
         return invoice;
     }
 
-
-
+    private String generateInvoiceNumber() {
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        String formattedDateTime = now.format(formatter); // Example: 20230315123045
+        return "INV-" + formattedDateTime;
+    }
 
 
     //Helper method to Schedule generation of monthly invoices for all users
@@ -90,6 +101,7 @@ public class InvoiceService {
             }
         }
     }
+
     //Helper method to adjust the date to the nearest weekday if it falls on a weekend
     private LocalDate adjustToWeekdayIfWeekend(LocalDate date) {
         DayOfWeek dayOfWeek = date.getDayOfWeek();
@@ -102,9 +114,6 @@ public class InvoiceService {
     }
 
 
-
-
-
     //Method to generate invoices for all users in a session
     public List<InvoiceGenerationResponse> generateInvoicesForSession(Long sessionId) throws FileNotFoundException {
         List<InvoiceGenerationResponse> responses = new ArrayList<>();
@@ -112,7 +121,7 @@ public class InvoiceService {
                 .orElseThrow(() -> new IllegalArgumentException("Session not found"));
 
         for (UserEntity user : session.getUsers()) {
-            if (user.getSubscriptions().isEmpty()) {
+            if (user.getSubscription() == null) {
                 InvoiceEntity invoice = createInvoiceForSession(user, session);
                 String filePath = generateAndStoreInvoice(invoice);
                 responses.add(new InvoiceGenerationResponse(true, "Invoice generated for user " + user.getId(), filePath));
@@ -120,6 +129,8 @@ public class InvoiceService {
         }
         return responses;
     }
+
+
     //Method to generate an invoice for a user in a session
     public InvoiceGenerationResponse generateInvoiceForUserInSession(Long userId, Long sessionId) throws FileNotFoundException {
         UserEntity user = userEntityRepository.findById(userId)
@@ -127,7 +138,7 @@ public class InvoiceService {
         SessionEntity session = sessionRepository.findById(sessionId)
                 .orElseThrow(() -> new IllegalArgumentException("Session not found"));
 
-        if (!user.getSubscriptions().isEmpty()) {
+        if (user.getSubscription() != null) {
             return new InvoiceGenerationResponse(false, "User has a subscription, no invoice needed", null);
         }
 
@@ -138,7 +149,7 @@ public class InvoiceService {
 
 
     //Helper method to create an invoice for a user in a session
-    private static InvoiceEntity createInvoiceForSession (UserEntity user, SessionEntity session) {
+    private static InvoiceEntity createInvoiceForSession(UserEntity user, SessionEntity session) {
         ClubEntity club = user.getClubEntity(); // User's associated club
 
         InvoiceEntity invoice = new InvoiceEntity();
@@ -156,48 +167,61 @@ public class InvoiceService {
     //Helper method to generate and store an invoice
     public String generateAndStoreInvoice(InvoiceEntity invoice) throws FileNotFoundException {
 
-    String filePath = "invoices/invoice_" + invoice.getId() + ".pdf";
-    PdfWriter writer = new PdfWriter(filePath);
-    PdfDocument pdfDoc = new PdfDocument(writer);
-    Document document = new Document(pdfDoc);
+        // Save the invoice entity to ensure it has an ID
+        invoice = invoiceRepository.save(invoice);
 
-    // Invoice Header
-    document.add(new Paragraph("PlayFit Sports Club").setBold());
-    document.add(new Paragraph("Invoice").setFontSize(14).setUnderline());
+        // Create the directory if it doesn't exist
+        String directoryPath = "invoices"; // Relative path
+        File directory = new File(directoryPath);
+        if (!directory.exists()) {
+            directory.mkdirs(); // This will create the directory
+        }
 
-    // Invoice Details
-    document.add(new Paragraph("Invoice Number: " + invoice.getInvoiceNum()));
-    document.add(new Paragraph("Invoice Date: " + invoice.getInvoiceDate().format(DateTimeFormatter.ISO_DATE)));
-    document.add(new Paragraph("Due Date: " + invoice.getDueDate()));
+        // Generate the file path using the invoice ID
+        String filePath = directoryPath + "/invoice_" + invoice.getId() + ".pdf";
 
-    // Club Details
-    document.add(new Paragraph("Club Name: " + invoice.getClubName()));
-    document.add(new Paragraph("Organization Number: " + invoice.getOrganizationalNumber()));
-    document.add(new Paragraph("Address: " + invoice.getOrganizationAddress()));
+        // PDF generation logic
+        PdfWriter writer = new PdfWriter(filePath);
+        PdfDocument pdfDoc = new PdfDocument(writer);
+        Document document = new Document(pdfDoc);
 
-    // Member Details
-    document.add(new Paragraph("Member Name: " + invoice.getMemberFirstName() + " " + invoice.getMemberLastName()));
-    document.add(new Paragraph("Member Email: " + invoice.getMemberEmail()));
+        // Invoice Header
+        document.add(new Paragraph("PlayFit Sports Club").setBold());
+        document.add(new Paragraph("Invoice").setFontSize(14).setUnderline());
 
-    // Pricing Details
-    document.add(new Paragraph("Total Amount: $" + invoice.getTotaltAmount()));
-    document.add(new Paragraph("Price Excl. VAT: $" + invoice.getPriceExclVAT()));
-    if (invoice.getDiscount() != null && invoice.getDiscount() > 0) {
-        document.add(new Paragraph("Discount: $" + invoice.getDiscount()));
+        // Invoice Details
+        document.add(new Paragraph("Invoice Number: " + invoice.getInvoiceNum()));
+        document.add(new Paragraph("Invoice Date: " + invoice.getInvoiceDate().format(DateTimeFormatter.ISO_DATE)));
+        document.add(new Paragraph("Due Date: " + invoice.getDueDate()));
+
+        // Club Details
+        document.add(new Paragraph("Club Name: " + invoice.getClubName()));
+        document.add(new Paragraph("Organization Number: " + invoice.getOrganizationalNumber()));
+        document.add(new Paragraph("Address: " + invoice.getOrganizationAddress()));
+
+        // Member Details
+        document.add(new Paragraph("Member Name: " + invoice.getMemberFirstName() + " " + invoice.getMemberLastName()));
+        document.add(new Paragraph("Member Email: " + invoice.getMemberEmail()));
+
+        // Pricing Details
+        document.add(new Paragraph("Total Amount: $" + invoice.getTotaltAmount()));
+        document.add(new Paragraph("Price Excl. VAT: $" + invoice.getPriceExclVAT()));
+        if (invoice.getDiscount() != null && invoice.getDiscount() > 0) {
+            document.add(new Paragraph("Discount: $" + invoice.getDiscount()));
+        }
+
+        // Invoice Status and Payment Method
+        document.add(new Paragraph("Invoice Status: " + invoice.getInvoiceStatus()));
+        document.add(new Paragraph("Payment Method: " + invoice.getPaymentMethod()));
+
+        // Close the document
+        document.close();
+
+        // Update the InvoiceEntity with the file path and save
+        invoice.setInvoiceFilePath(filePath);
+        invoiceRepository.save(invoice);
+        return filePath;
     }
-
-    // Invoice Status and Payment Method
-    document.add(new Paragraph("Invoice Status: " + invoice.getInvoiceStatus()));
-    document.add(new Paragraph("Payment Method: " + invoice.getPaymentMethod()));
-
-    // Close the document
-    document.close();
-
-    // Update the InvoiceEntity with the file path and save
-    invoice.setInvoiceFilePath(new File(filePath).getAbsolutePath());
-    invoiceRepository.save(invoice);
-    return filePath;
-}
 
 
 }

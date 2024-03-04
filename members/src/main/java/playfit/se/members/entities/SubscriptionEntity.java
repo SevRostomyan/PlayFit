@@ -27,15 +27,9 @@ public class SubscriptionEntity {
 
     private Integer durationInMonths;
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_subscriptions",
-            joinColumns = @JoinColumn(name = "subscription_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    private List<UserEntity> users; // Users subscribed to this subscription
 
-    // Linked activities can be optional based on your application logic
+
+    // Linked activities can be optional based on the application logic
     // private List<ActivityGroupEntity> linkedActivities;
 
 }

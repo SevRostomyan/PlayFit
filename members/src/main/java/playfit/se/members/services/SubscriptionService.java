@@ -1,5 +1,6 @@
 package playfit.se.members.services;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import playfit.se.members.entities.PricingEntity;
@@ -49,6 +50,7 @@ public class SubscriptionService {
         }
     }
 
+    @Transactional
     public AssignSubscriptionResponse assignSubscriptionToUser(Long userId, Long subscriptionId) {
         AssignSubscriptionResponse response = new AssignSubscriptionResponse();
         try {
@@ -58,7 +60,7 @@ public class SubscriptionService {
             SubscriptionEntity subscription = subscriptionRepository.findById(subscriptionId)
                     .orElseThrow(() -> new IllegalArgumentException("Subscription not found"));
 
-            user.getSubscriptions().add(subscription);
+            user.setSubscription(subscription);
             userEntityRepository.save(user);
 
             response.setSuccess(true);
