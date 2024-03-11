@@ -30,7 +30,6 @@ public class UserEntityController {
     public ResponseEntity<String> signUp(@PathVariable Long clubId, @RequestBody SignUpUserEntityDTO signUpUserEntityDTO) {
         UserRegistrationResponse response = userEntityService.signUp(clubId, signUpUserEntityDTO);
         if (response.isSuccess()) {
-            // vi måste implementera notification (send an email)
             return ResponseEntity.ok(response.getMessage());
         } else {
             return ResponseEntity.badRequest().body(response.getMessage());
