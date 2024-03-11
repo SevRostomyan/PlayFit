@@ -28,6 +28,7 @@ public class ClubService {
     private final UserEntityRepository userEntityRepository;
     private final UserEntityService userEntityService;
     private final AddressRepository addressRepository;
+    private final EmailService emailService;
 
 
     public ClubRegistrationResponse createClub(SignUpClubDTO signUpClubDTO) {
@@ -50,6 +51,9 @@ public class ClubService {
             userEntity.setRoles(Set.of(Role.REPRESENTATIVE));
             userEntityRepository.save(userEntity);
             String clubName = signUpClubDTO.getClubName();
+            emailService.sendSimpleEmail(userEntity.getEmail(),
+                    "Welcome to PlayFit",
+                    "Welcome to PlayFit.");
             response.setSuccess(true);
             response.setMessage("You have successfully created a club named " + clubName + "!");
         }

@@ -35,6 +35,7 @@ public class UserEntityService {
     private final JWTService jwtService;
     private final AddressRepository addressRepository;
     private final TokenRepository tokenRepository;
+    private final EmailService emailService;
 
 
     public UserRegistrationResponse signUp(Long clubId, SignUpUserEntityDTO signUpUserEntityDTO) {
@@ -58,6 +59,9 @@ public class UserEntityService {
             userEntityRepository.save(userEntity);
             clubRepository.save(existingClubEntity);
             String clubName = existingClubEntity.getClubName();
+            emailService.sendSimpleEmail(signUpUserEntityDTO.getEmail(),
+                    "Welcome to " + clubName,
+                    "Welcome to " + clubName + "!");
             response.setSuccess(true);
             response.setMessage("You have successfully created an account in " + clubName + "!");
         }
@@ -125,6 +129,7 @@ public class UserEntityService {
         });
         tokenRepository.saveAll(validUserTokens);
     }
+
     public void updateUserRoles(Long userId, Set<Role> newRoles) {
         // Fetch the user entity from the database
         UserEntity user = userEntityRepository.findById(userId)
