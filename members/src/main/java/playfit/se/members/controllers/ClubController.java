@@ -1,6 +1,7 @@
 package playfit.se.members.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import playfit.se.members.DTOs.InfoClubDTO;
@@ -17,7 +18,9 @@ import java.util.List;
 @CrossOrigin
 public class ClubController {
 
+
     private final ClubService clubService;
+
 
 
     @PostMapping("/create-club")
@@ -45,4 +48,8 @@ public class ClubController {
             return ResponseEntity.ok(InfoclubDTOS);
 
         }
+
+
+
+
     }

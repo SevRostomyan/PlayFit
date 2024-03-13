@@ -141,4 +141,16 @@ public class UserEntityService {
         // Save the updated user entity back to the database
         userEntityRepository.save(user);
     }
+
+    public String holdAccount(Long userId) {
+        Optional <UserEntity> existingUser = userEntityRepository.findById(userId);
+        if (existingUser.isPresent()){
+            UserEntity user = existingUser.get();
+            user.setHoldAccountStatus(true);
+            userEntityRepository.save(user);
+            return "account is deleted";
+        }else {
+            return "user not found";
+        }
+    }
 }

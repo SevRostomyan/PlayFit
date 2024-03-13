@@ -1,6 +1,7 @@
 package playfit.se.members.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import playfit.se.members.DTOs.InfoClubDTO;
 import playfit.se.members.DTOs.SignUpClubDTO;
@@ -108,6 +109,8 @@ public class ClubService {
         clubInfoDTO.setMobile(clubEntity.getMobile());
         return clubInfoDTO;
     }
+
+
 
 }
 

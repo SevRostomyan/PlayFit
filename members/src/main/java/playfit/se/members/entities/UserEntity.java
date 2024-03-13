@@ -33,6 +33,7 @@ public class UserEntity implements UserDetails {
     private String gender;
     private String mobile;
     private boolean accountStatus = false;
+    private boolean holdAccountStatus = false;
     private boolean loginStatus = false;
     @ManyToOne
     private ClubEntity clubEntity;

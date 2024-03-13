@@ -66,6 +66,11 @@ public class UserEntityController {
         userEntityService.updateUserRoles(userId, newRoles);
     }
 
+    @PutMapping("/hold-membership/{userId}")
+    public String holdAccount(@PathVariable Long userId) {
+        return userEntityService.holdAccount(userId);
+    }
+
 }
 
 
