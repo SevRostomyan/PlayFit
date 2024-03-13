@@ -1,6 +1,8 @@
 package playfit.se.members.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
@@ -21,12 +23,15 @@ import playfit.se.members.responses.UserRegistrationResponse;
 import playfit.se.members.token.Token;
 import playfit.se.members.token.TokenType;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 
 @Service
 @RequiredArgsConstructor
+@EnableScheduling
 public class UserEntityService {
     private final UserEntityRepository userEntityRepository;
     private final ClubRepository clubRepository;
@@ -56,6 +61,8 @@ public class UserEntityService {
             UserEntity userEntity = getUserEntity(signUpUserEntityDTO, addressEntity);
             userEntity.setClubEntity(existingClubEntity);
             userEntity.setRoles(Set.of(Role.USER));
+            userEntity.setCreatedAt(LocalDateTime.now());
+            userEntity.setAccountStatus(true);
             userEntityRepository.save(userEntity);
             clubRepository.save(existingClubEntity);
             String clubName = existingClubEntity.getClubName();
@@ -66,6 +73,13 @@ public class UserEntityService {
             response.setMessage("You have successfully created an account in " + clubName + "!");
         }
         return (response);
+    }
+
+    @Scheduled(fixedRate = 1 * 60 * 60 * 1000)
+    public void deleteInactiveUsers() {
+        LocalDateTime twentyFourHoursAgo = LocalDateTime.now().minusHours(24);
+        List<UserEntity> inactiveUsers = userEntityRepository.findByCreatedAtBeforeAndAccountStatusIsFalse(twentyFourHoursAgo);
+        userEntityRepository.deleteAll(inactiveUsers);
     }
 
     public UserEntity getUserEntity(SignUpUserEntityDTO signUpUserEntityDTO, AddressEntity addressEntity) {
