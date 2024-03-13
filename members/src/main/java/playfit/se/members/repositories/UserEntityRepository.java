@@ -6,6 +6,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import playfit.se.members.entities.UserEntity;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -17,6 +19,8 @@ public interface UserEntityRepository extends JpaRepository<UserEntity, Long> {
     Optional<UserEntity> findByEmailAndClubId(@Param("email") String userEmail, @Param("clubId") Long clubId);
 
     Optional<UserEntity> findUserByEmail(String email);
+
+    List<UserEntity> findByCreatedAtBeforeAndAccountStatusIsFalse(LocalDateTime createdAt);
 
 }
 

@@ -15,6 +15,7 @@ import playfit.se.members.responses.ClubRegistrationResponse;
 import playfit.se.members.responses.ClubUpdateResponse;
 
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -49,6 +50,7 @@ public class ClubService {
             UserEntity userEntity = userEntityService.getUserEntity(signUpClubDTO.getRepresentative(), addressEntity);
             userEntity.setClubEntity(clubEntity);
             userEntity.setRoles(Set.of(Role.REPRESENTATIVE));
+            userEntity.setCreatedAt(LocalDateTime.now());
             userEntityRepository.save(userEntity);
             String clubName = signUpClubDTO.getClubName();
             emailService.sendSimpleEmail(userEntity.getEmail(),
