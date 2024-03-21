@@ -1,6 +1,7 @@
 package playfit.se.members.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import playfit.se.members.DTOs.InfoClubDTO;
 import playfit.se.members.DTOs.SignUpClubDTO;
@@ -15,8 +16,11 @@ import playfit.se.members.responses.ClubRegistrationResponse;
 import playfit.se.members.responses.ClubUpdateResponse;
 
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +30,7 @@ public class ClubService {
     private final UserEntityRepository userEntityRepository;
     private final UserEntityService userEntityService;
     private final AddressRepository addressRepository;
+    private final EmailService emailService;
 
 
     public ClubRegistrationResponse createClub(SignUpClubDTO signUpClubDTO) {
@@ -46,8 +51,12 @@ public class ClubService {
             UserEntity userEntity = userEntityService.getUserEntity(signUpClubDTO.getRepresentative(), addressEntity);
             userEntity.setClubEntity(clubEntity);
             userEntity.setRoles(Set.of(Role.REPRESENTATIVE));
+            userEntity.setCreatedAt(LocalDateTime.now());
             userEntityRepository.save(userEntity);
             String clubName = signUpClubDTO.getClubName();
+            emailService.sendSimpleEmail(userEntity.getEmail(),
+                    "Welcome to PlayFit",
+                    "Welcome to PlayFit.");
             response.setSuccess(true);
             response.setMessage("You have successfully created a club named " + clubName + "!");
         }
@@ -87,11 +96,25 @@ public class ClubService {
         }
         return response;
     }
+
+    public List<InfoClubDTO> getAllInfoClubs() {
+        List<ClubEntity> clubs = clubRepository.findAll();
+        return clubs.stream().map(this::covertToClubInfoDTO).collect(Collectors.toList());
+    }
+
+    private InfoClubDTO covertToClubInfoDTO(ClubEntity clubEntity) {
+        InfoClubDTO clubInfoDTO = new InfoClubDTO();
+        clubInfoDTO.setOrgName(clubEntity.getClubName());
+        clubInfoDTO.setAddress(clubEntity.getAddress());
+        clubInfoDTO.setZipCode(clubEntity.getZipCode());
+        clubInfoDTO.setCity(clubEntity.getCity());
+        clubInfoDTO.setMobile(clubEntity.getMobile());
+        return clubInfoDTO;
+    }
+
+
+
 }
-
-
-
-
 
 
 

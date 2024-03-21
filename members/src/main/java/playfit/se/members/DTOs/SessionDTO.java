@@ -14,6 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public class SessionDTO {
 
+    private Long id;
     private String nameOfSession;
     private LocalDate passDate;
     private List<Long> userIds;

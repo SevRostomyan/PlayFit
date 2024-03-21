@@ -11,6 +11,7 @@ import playfit.se.members.enums.Role;
 import playfit.se.members.token.Token;
 
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 
@@ -33,6 +34,7 @@ public class UserEntity implements UserDetails {
     private String gender;
     private String mobile;
     private boolean accountStatus = false;
+    private boolean holdAccountStatus = false;
     private boolean loginStatus = false;
     @ManyToOne
     private ClubEntity clubEntity;
@@ -42,6 +44,9 @@ public class UserEntity implements UserDetails {
     @ElementCollection(targetClass = Role.class)
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
     @ManyToMany
     @JoinTable(

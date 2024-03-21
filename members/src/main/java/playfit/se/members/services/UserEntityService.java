@@ -1,6 +1,8 @@
 package playfit.se.members.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
@@ -21,12 +23,15 @@ import playfit.se.members.responses.UserRegistrationResponse;
 import playfit.se.members.token.Token;
 import playfit.se.members.token.TokenType;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 
 @Service
 @RequiredArgsConstructor
+@EnableScheduling
 public class UserEntityService {
     private final UserEntityRepository userEntityRepository;
     private final ClubRepository clubRepository;
@@ -35,6 +40,7 @@ public class UserEntityService {
     private final JWTService jwtService;
     private final AddressRepository addressRepository;
     private final TokenRepository tokenRepository;
+    private final EmailService emailService;
 
 
     public UserRegistrationResponse signUp(Long clubId, SignUpUserEntityDTO signUpUserEntityDTO) {
@@ -55,13 +61,25 @@ public class UserEntityService {
             UserEntity userEntity = getUserEntity(signUpUserEntityDTO, addressEntity);
             userEntity.setClubEntity(existingClubEntity);
             userEntity.setRoles(Set.of(Role.USER));
+            userEntity.setCreatedAt(LocalDateTime.now());
+            userEntity.setAccountStatus(true);
             userEntityRepository.save(userEntity);
             clubRepository.save(existingClubEntity);
             String clubName = existingClubEntity.getClubName();
+            emailService.sendSimpleEmail(signUpUserEntityDTO.getEmail(),
+                    "Welcome to " + clubName,
+                    "Welcome to " + clubName + "!");
             response.setSuccess(true);
             response.setMessage("You have successfully created an account in " + clubName + "!");
         }
         return (response);
+    }
+
+    @Scheduled(fixedRate = 1 * 60 * 60 * 1000)
+    public void deleteInactiveUsers() {
+        LocalDateTime twentyFourHoursAgo = LocalDateTime.now().minusHours(24);
+        List<UserEntity> inactiveUsers = userEntityRepository.findByCreatedAtBeforeAndAccountStatusIsFalse(twentyFourHoursAgo);
+        userEntityRepository.deleteAll(inactiveUsers);
     }
 
     public UserEntity getUserEntity(SignUpUserEntityDTO signUpUserEntityDTO, AddressEntity addressEntity) {
@@ -106,7 +124,7 @@ public class UserEntityService {
                 tokenRepository.save(token);
                 response.setSuccess(true);
                 response.setMessage("You have successfully logged in.");
-                response.setToken(jwt);
+                response.setAccessToken(jwt);
             } catch (AuthenticationException e) {
                 response.setSuccess(false);
                 response.setMessage("Authentication failed.");
@@ -124,5 +142,29 @@ public class UserEntityService {
             token.setRevoked(true);
         });
         tokenRepository.saveAll(validUserTokens);
+    }
+
+    public void updateUserRoles(Long userId, Set<Role> newRoles) {
+        // Fetch the user entity from the database
+        UserEntity user = userEntityRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+
+        // Update the roles of the user entity
+        user.setRoles(newRoles);
+
+        // Save the updated user entity back to the database
+        userEntityRepository.save(user);
+    }
+
+    public String holdAccount(Long userId) {
+        Optional <UserEntity> existingUser = userEntityRepository.findById(userId);
+        if (existingUser.isPresent()){
+            UserEntity user = existingUser.get();
+            user.setHoldAccountStatus(true);
+            userEntityRepository.save(user);
+            return "account is deleted";
+        }else {
+            return "user not found";
+        }
     }
 }

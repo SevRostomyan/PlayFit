@@ -5,11 +5,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import playfit.se.members.DTOs.ActivityGroupDTO;
 import playfit.se.members.DTOs.SessionDTO;
+import playfit.se.members.DTOs.UserForActivityGroupDTO;
 import playfit.se.members.responses.AddNewUserToGroupResponse;
 import playfit.se.members.responses.AddTrainerToActivityGroupResponse;
 import playfit.se.members.responses.CreateActivityResponse;
 import playfit.se.members.responses.CreateSessionResponse;
 import playfit.se.members.services.ActivityGroupService;
+
+import java.util.List;
 
 @RequestMapping("/api/v1/activities-group")
 @RestController
@@ -36,23 +39,28 @@ public class ActivityGroupController {
     @PostMapping("/addUsersToActivityGroup/{activityGroupId}")
     public ResponseEntity<String> addUsersToActivityGroup(@PathVariable Long activityGroupId, @RequestBody ActivityGroupDTO activityGroupDTO) {
         AddNewUserToGroupResponse response = activityGroupService.addUsersToActivityGroup(activityGroupId, activityGroupDTO.getUserIds());
-
         if (response.isSuccess()) {
             return ResponseEntity.ok(response.getMessage());
         } else {
             return ResponseEntity.badRequest().body(response.getMessage());
         }
     }
-
     @PostMapping("/addTrainerToActivityGroup/{activityGroupId}/{userId}")
     public ResponseEntity<String> addTrainerToActivityGroup(@PathVariable Long activityGroupId, @PathVariable Long userId) {
         AddTrainerToActivityGroupResponse response = activityGroupService.addTrainerToActivityGroup(activityGroupId, userId);
-
         if (response.isSuccess()) {
             return ResponseEntity.ok(response.getMessage());
         } else {
             return ResponseEntity.badRequest().body(response.getMessage());
         }
     }
-
+    @GetMapping("/activity-groups")
+    public List<ActivityGroupDTO> getActivityGroups() {
+        return activityGroupService.getActivityGroups();
+    }
+    @GetMapping("/activity-groups/{activityGroupId}/users")
+    public ResponseEntity<List<UserForActivityGroupDTO>> getUsersInActivityGroup(@PathVariable Long activityGroupId) {
+        List<UserForActivityGroupDTO> users = activityGroupService.getUsersInActivityGroup(activityGroupId);
+        return ResponseEntity.ok(users);
+    }
 }
