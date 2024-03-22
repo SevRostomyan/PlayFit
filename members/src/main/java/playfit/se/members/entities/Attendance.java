@@ -18,5 +18,7 @@ public class Attendance {
     private SessionEntity session;
     @ManyToOne
     private UserEntity user;
+
+    private boolean isInvited;
     private boolean isPresent;
 }

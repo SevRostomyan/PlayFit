@@ -1,7 +1,6 @@
 package playfit.se.members.services;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import playfit.se.members.DTOs.InfoClubDTO;
 import playfit.se.members.DTOs.SignUpClubDTO;

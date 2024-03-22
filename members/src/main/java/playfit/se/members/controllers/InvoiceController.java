@@ -17,13 +17,14 @@ public class InvoiceController {
     private final InvoiceService invoiceService;
 
 
-
+    //TODO: I metoden för att skapa en session har du lagt in ett default pris. Dubbelkolla så att generateMonthlyInvoices-metoden  ignorerar detta pris om kunden har prenumeration varifrån priset hämtas
     @PostMapping("/generate/monthly/{userId}")
     public ResponseEntity<List<InvoiceGenerationResponse>> generateMonthlyInvoices(@PathVariable Long userId) throws FileNotFoundException {
         List<InvoiceGenerationResponse> responses = invoiceService.generateMonthlyInvoices(userId);
         return ResponseEntity.ok(responses); // Respond with a list of responses
     }
 
+    //Todo: se till denna metod använder enbart priset på sessionen och inte priset på prenumerationen
     //For all users in a single session
     @PostMapping("/generate-for-session/{sessionId}")
     public ResponseEntity<List<InvoiceGenerationResponse>> generateInvoicesForSession(@PathVariable Long sessionId) throws FileNotFoundException {
@@ -31,7 +32,9 @@ public class InvoiceController {
         return ResponseEntity.ok(responses);
     }
 
+    //Todo: se till denna metod använder enbart priset på sessionen och inte priset på prenumerationen
     //For a single user in a single session
+
     @PostMapping("/generate-for-user/{userId}/in-session/{sessionId}")
     public ResponseEntity<InvoiceGenerationResponse> generateInvoiceForUserInSession(@PathVariable Long userId, @PathVariable Long sessionId) throws FileNotFoundException {
         InvoiceGenerationResponse response = invoiceService.generateInvoiceForUserInSession(userId, sessionId);

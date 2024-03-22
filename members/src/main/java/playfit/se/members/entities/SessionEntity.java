@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -18,7 +18,7 @@ public class SessionEntity {
     @GeneratedValue
     private Long id;
     private String nameOfSession;
-    private LocalDate passDate;
+    private LocalDateTime passDateTime;
 
     @OneToMany(mappedBy = "session")
     private List<Attendance> attendances;
