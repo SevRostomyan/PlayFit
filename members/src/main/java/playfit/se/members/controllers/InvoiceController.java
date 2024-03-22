@@ -3,7 +3,6 @@ package playfit.se.members.controllers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import playfit.se.members.entities.InvoiceEntity;
 import playfit.se.members.responses.InvoiceGenerationResponse;
 import playfit.se.members.services.InvoiceService;
 
