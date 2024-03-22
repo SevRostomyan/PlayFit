@@ -11,12 +11,16 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Table
 public class ActivityGroupEntity {
     @Id
     @GeneratedValue
     private Long id;
 
     private String activityName;
+
+    @ManyToOne
+    private PricingEntity pricing;
 
     @ManyToMany(mappedBy = "activityGroups")
     private List<UserEntity> users;

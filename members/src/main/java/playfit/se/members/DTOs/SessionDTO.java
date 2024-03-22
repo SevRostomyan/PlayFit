@@ -1,20 +1,22 @@
 package playfit.se.members.DTOs;
 
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.OneToOne;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import playfit.se.members.entities.ActivityGroupEntity;
+import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
+
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class SessionDTO {
 
     private Long id;
-    private String nameOfSession;
-    private LocalDate passDate;
-    private boolean isPresent;
-    private List<Long> userId;
-    private ActivityGroupEntity activityGroupEntity;
+    private String nameOfSession; // Name of the session, required for session creation
+    private LocalDateTime passDateTime;
+    private List<Long> userIds;
+    private Long activityGroupId;
+    private Long pricingId;
 }

@@ -9,9 +9,9 @@ import java.time.LocalDate;
 
 @Entity
 @Data
-@Table
 @NoArgsConstructor
 @AllArgsConstructor
+@Table
 public class NotificationEntity {
     @Id
     @GeneratedValue

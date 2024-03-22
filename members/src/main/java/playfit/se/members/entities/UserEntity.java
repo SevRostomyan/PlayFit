@@ -68,6 +68,16 @@ public class UserEntity implements UserDetails {
     @OneToMany(mappedBy = "userEntity")
     private List<Token> tokens;
 
+    @ManyToOne
+    private SubscriptionEntity subscription;
+
+
+    @OneToMany(mappedBy = "user")
+    private List<Attendance> attendances;
+
+    @ManyToMany(mappedBy = "users")
+    private List<SessionEntity> sessions;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream()
